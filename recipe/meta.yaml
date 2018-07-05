@@ -17,7 +17,7 @@ build:
 requirements:
   build:
     - pkg-config
-    - perl 5.22.2.1
+    - perl
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
   host:
