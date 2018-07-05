@@ -34,6 +34,8 @@ macos_min_version:
 - '10.9'
 pango:
 - '1.40'
+perl:
+- '5.26'
 pin_run_as_build:
   cairo:
     max_pin: x.x
@@ -60,6 +62,8 @@ pin_run_as_build:
   libxml2:
     max_pin: x.x
   pango:
+    max_pin: x.x
+  perl:
     max_pin: x.x
   pixman:
     max_pin: x.x
