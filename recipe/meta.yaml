@@ -20,6 +20,7 @@ requirements:
     - perl
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
+    - pthread-stubs          # [linux]
   host:
     - atk
     - cairo
