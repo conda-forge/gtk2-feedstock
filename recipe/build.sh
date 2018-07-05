@@ -1,14 +1,13 @@
 #!/usr/bin/env bash
 
 
-GDKTARGET=""
 if [ "$(uname)" == "Darwin" ];
 then
-    export GDKTARGET="quartz"
+    GDKTARGET="quartz"
     export LDFLAGS="${LDFLAGS} -Wl,-rpath,${PREFIX}/lib"
 elif [ "$(uname)" == "Linux" ];
 then
-    export GDKTARGET="x11"
+    GDKTARGET="x11"
     export LDFLAGS="${LDFLAGS} -Wl,-rpath=${PREFIX}/lib"
 fi
 
