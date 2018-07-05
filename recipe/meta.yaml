@@ -17,6 +17,7 @@ build:
 requirements:
   build:
     - pkg-config
+    - libtool
     - perl
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
