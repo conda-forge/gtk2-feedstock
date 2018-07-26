@@ -10,7 +10,7 @@ source:
   sha256: 68c1922732c7efc08df4656a5366dcc3afdc8791513400dac276009b40954658
 
 build:
-  number: 0
+  number: 1
   skip: true  # [win]
   detect_binary_files_with_prefix: true
 
@@ -18,7 +18,7 @@ requirements:
   build:
     - toolchain
     - pkg-config
-    - perl 5.22.2.1
+    - perl
     - atk
     - cairo 1.14.*
     - fontconfig 2.12.*
