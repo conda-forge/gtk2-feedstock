@@ -16,68 +16,67 @@ build:
 
 requirements:
   build:
-    - toolchain
     - pkg-config
     - perl 5.22.2.1
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+  host:
     - atk
-    - cairo 1.14.*
-    - fontconfig 2.12.*
-    - freetype 2.7
+    - cairo
+    - fontconfig
+    - freetype
     - gdk-pixbuf
     - gettext
-    - glib 2.51.*
+    - glib
     - gobject-introspection
     - graphite2
-    - harfbuzz 1.3.4
-    - icu 58.*
-    - jpeg 9*
+    - harfbuzz
+    - icu
+    - jpeg
     - libffi
     - libiconv
-    - libpng >=1.6.28,<1.7
-    - libtiff >=4.0.3,<4.0.8
-    - libxml2 2.9.*
-    - pango 1.40.*
+    - libpng
+    - libtiff
+    - libxml2
+    - pango
     - pcre
-    - pixman 0.34.*
-    - xz 5.2.*
-    - zlib 1.2.8
-
+    - pixman
+    - xz
+    - zlib
   run:
     - atk
-    - cairo 1.14.*
-    - fontconfig 2.12.*
-    - freetype 2.7
+    - cairo
+    - fontconfig
+    - freetype
     - gdk-pixbuf
     - gettext
-    - glib 2.51.*
+    - glib
     - gobject-introspection
     - graphite2
-    - harfbuzz 1.3.4
-    - icu 58.*
-    - jpeg 9*
+    - harfbuzz
+    - icu
+    - jpeg
     - libffi
     - libiconv
-    - libpng >=1.6.28,<1.7
-    - libtiff >=4.0.3,<4.0.8
-    - libxml2 2.9.*
-    - pango 1.40.*
+    - libpng
+    - libtiff
+    - libxml2
+    - pango
     - pcre
-    - pixman 0.34.*
-    - xz 5.2.*
-    - zlib 1.2.8
+    - pixman
+    - xz
+    - zlib
 
 test:
   commands:
-    - conda inspect linkages -p $PREFIX $PKG_NAME             # [not win]
-    - conda inspect objects -p $PREFIX $PKG_NAME              # [osx]
-    - test -f ${PREFIX}/lib/libgtk-x11-2.0{{ SHLIB_EXT }}     # [linux]
+    - test -f ${PREFIX}/lib/libgtk-x11-2.0{{ SHLIB_EXT }}  # [linux]
     - test -f ${PREFIX}/lib/libgtk-quartz-2.0{{ SHLIB_EXT }}  # [osx]
 
 about:
   home: https://developer.gnome.org/gtk/
   license: LGPL-2
   license_file: COPYING
-  summary: Primary library used to construct user interfaces in GNOME applications.
+  summary: Primary library used to construct user interfaces in GNOME applications
 
 extra:
   recipe-maintainers:
