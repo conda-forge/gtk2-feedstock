@@ -1,3 +1,5 @@
+build_number_decrement:
+- '1000'
 c_compiler:
 - toolchain_c
 cairo:
@@ -34,6 +36,8 @@ libxml2:
 - '2.9'
 pango:
 - '1.40'
+perl:
+- '5.26'
 pin_run_as_build:
   cairo:
     max_pin: x.x
@@ -61,6 +65,8 @@ pin_run_as_build:
     max_pin: x.x
   pango:
     max_pin: x.x
+  perl:
+    max_pin: x.x.x
   pixman:
     max_pin: x.x
   xz:
@@ -71,5 +77,12 @@ pixman:
 - '0.34'
 xz:
 - '5.2'
+zip_keys:
+- - c_compiler
+  - cxx_compiler
+  - channel_sources
+  - channel_targets
+  - docker_image
+  - build_number_decrement
 zlib:
 - '1.2'
