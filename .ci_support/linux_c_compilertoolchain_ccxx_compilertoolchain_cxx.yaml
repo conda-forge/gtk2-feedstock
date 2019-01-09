@@ -3,7 +3,7 @@ build_number_decrement:
 c_compiler:
 - toolchain_c
 cairo:
-- '1.14'
+- '1.16'
 channel_sources:
 - conda-forge,defaults
 channel_targets:
@@ -17,7 +17,7 @@ fontconfig:
 freetype:
 - 2.9.1
 glib:
-- '2.56'
+- '2.58'
 harfbuzz:
 - '1'
 icu:
@@ -29,7 +29,7 @@ libffi:
 libiconv:
 - '1.15'
 libpng:
-- 1.6.34
+- 1.6.35
 libtiff:
 - 4.0.9
 libxml2:
