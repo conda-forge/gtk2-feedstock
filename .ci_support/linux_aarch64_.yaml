@@ -1,11 +1,17 @@
+BUILD:
+- aarch64-conda_cos7-linux-gnu
 c_compiler:
 - gcc
 c_compiler_version:
 - '7'
 cairo:
 - '1.16'
+cdt_arch:
+- aarch64
+cdt_name:
+- cos7
 channel_sources:
-- conda-forge,defaults
+- conda-forge,c4aarch64,defaults
 channel_targets:
 - conda-forge main
 cxx_compiler:
@@ -13,7 +19,7 @@ cxx_compiler:
 cxx_compiler_version:
 - '7'
 docker_image:
-- condaforge/linux-anvil-comp7
+- condaforge/linux-anvil-aarch64
 fontconfig:
 - '2.13'
 freetype:
@@ -25,7 +31,7 @@ glib:
 harfbuzz:
 - '2'
 icu:
-- '58'
+- '60'
 jpeg:
 - '9'
 libffi:
@@ -33,9 +39,9 @@ libffi:
 libiconv:
 - '1.15'
 libpng:
-- 1.6.35
+- 1.6.36
 libtiff:
-- 4.0.9
+- 4.0.10
 libxml2:
 - '2.9'
 pango:

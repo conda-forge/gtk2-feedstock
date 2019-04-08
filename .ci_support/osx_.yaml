@@ -2,6 +2,8 @@ MACOSX_DEPLOYMENT_TARGET:
 - '10.9'
 c_compiler:
 - clang
+c_compiler_version:
+- '4'
 cairo:
 - '1.16'
 channel_sources:
@@ -10,10 +12,14 @@ channel_targets:
 - conda-forge main
 cxx_compiler:
 - clangxx
+cxx_compiler_version:
+- '4'
 fontconfig:
 - '2.13'
 freetype:
 - 2.9.1
+gdk_pixbuf:
+- 2.36.12
 glib:
 - '2.58'
 harfbuzz:
@@ -47,8 +53,8 @@ pin_run_as_build:
     max_pin: x
   freetype:
     max_pin: x
-  glib:
-    max_pin: x.x
+  gdk_pixbuf:
+    max_pin: x.x.x
   harfbuzz:
     max_pin: x
   icu:
