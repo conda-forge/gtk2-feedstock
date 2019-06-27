@@ -16,6 +16,7 @@ build:
 
 requirements:
   build:
+    - make
     - pkg-config
     - perl
     - {{ compiler('c') }}
