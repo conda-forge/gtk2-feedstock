@@ -45,7 +45,7 @@ libtiff:
 libxml2:
 - '2.9'
 pango:
-- '1.40'
+- '1.42'
 perl:
 - '5.26'
 pin_run_as_build:
