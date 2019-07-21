@@ -31,7 +31,7 @@ glib:
 harfbuzz:
 - '2'
 icu:
-- '60'
+- '64.2'
 jpeg:
 - '9'
 libffi:
@@ -47,7 +47,7 @@ libxml2:
 pango:
 - '1.42'
 perl:
-- '5.26'
+- 5.26.2
 pin_run_as_build:
   cairo:
     max_pin: x.x
