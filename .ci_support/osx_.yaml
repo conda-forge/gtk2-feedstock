@@ -25,7 +25,7 @@ glib:
 harfbuzz:
 - '2'
 icu:
-- '64.2'
+- '67'
 jpeg:
 - '9'
 libffi:
