@@ -5,7 +5,7 @@ c_compiler_version:
 cairo:
 - '1.16'
 cdt_name:
-- cos7
+- cos6
 channel_sources:
 - conda-forge,defaults
 channel_targets:
@@ -15,7 +15,7 @@ cxx_compiler:
 cxx_compiler_version:
 - '9'
 docker_image:
-- quay.io/condaforge/linux-anvil-ppc64le
+- quay.io/condaforge/linux-anvil-comp7
 fontconfig:
 - '2.13'
 freetype:
@@ -76,7 +76,7 @@ pin_run_as_build:
 pixman:
 - '0'
 target_platform:
-- linux-ppc64le
+- linux-64
 xz:
 - '5.2'
 zip_keys:
