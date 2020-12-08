@@ -18,6 +18,7 @@ requirements:
     - make
     - pkg-config
     - perl
+    - gnuconfig  # [unix]
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
   host:
