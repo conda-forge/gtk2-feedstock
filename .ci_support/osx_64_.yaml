@@ -3,7 +3,7 @@ MACOSX_DEPLOYMENT_TARGET:
 c_compiler:
 - clang
 c_compiler_version:
-- '9'
+- '11'
 cairo:
 - '1.16'
 channel_sources:
@@ -13,25 +13,25 @@ channel_targets:
 cxx_compiler:
 - clangxx
 cxx_compiler_version:
-- '9'
+- '11'
 fontconfig:
 - '2.13'
 freetype:
-- 2.9.1
+- '2'
 gdk_pixbuf:
-- 2.36.12
+- '2'
 glib:
 - '2.58'
 harfbuzz:
 - '2'
 icu:
-- '67'
+- '68'
 jpeg:
 - '9'
 libffi:
 - '3.2'
 libiconv:
-- '1.15'
+- '1.16'
 libpng:
 - '1.6'
 libtiff:
@@ -40,8 +40,6 @@ libxml2:
 - '2.9'
 macos_machine:
 - x86_64-apple-darwin13.4.0
-macos_min_version:
-- '10.9'
 pango:
 - '1.42'
 perl:
@@ -53,11 +51,7 @@ pin_run_as_build:
     max_pin: x
   freetype:
     max_pin: x
-  gdk_pixbuf:
-    max_pin: x.x.x
   harfbuzz:
-    max_pin: x
-  icu:
     max_pin: x
   jpeg:
     max_pin: x
@@ -75,15 +69,18 @@ pin_run_as_build:
     max_pin: x.x
   perl:
     max_pin: x.x.x
-  pixman:
-    max_pin: x.x
   xz:
     max_pin: x.x
   zlib:
     max_pin: x.x
 pixman:
-- '0.38'
+- '0'
+target_platform:
+- osx-64
 xz:
 - '5.2'
+zip_keys:
+- - c_compiler_version
+  - cxx_compiler_version
 zlib:
 - '1.2'
