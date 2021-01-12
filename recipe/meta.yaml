@@ -21,6 +21,7 @@ requirements:
     - gnuconfig  # [unix]
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
+    - python *
   host:
     - atk
     - cairo
