@@ -7,7 +7,7 @@ GDKTARGET=""
 if [ "$(uname)" == "Darwin" ];
 then
     export GDKTARGET="quartz"
-    export LDFLAGS="${LDFLAGS} -Wl,-rpath,${PREFIX}/lib"
+    export LDFLAGS="${LDFLAGS} -Wl,-rpath,${PREFIX}/lib -framework Carbon"
 elif [ "$(uname)" == "Linux" ];
 then
     export GDKTARGET="x11"
