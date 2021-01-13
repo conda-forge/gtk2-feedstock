@@ -19,21 +19,20 @@ requirements:
     - pkg-config
     - perl *
     - gnuconfig  # [unix]
+    - gobject-introspection
     - {{ compiler('c') }}
-    - atk                    # [build_platform != target_platform]
-    - cairo                  # [build_platform != target_platform]
-    - gdk-pixbuf             # [build_platform != target_platform]
-    - gettext                # [build_platform != target_platform]
-    - glib                   # [build_platform != target_platform]
-    - gobject-introspection  # [build_platform != target_platform]
-    - pango                  # [build_platform != target_platform]
+    - atk         # [build_platform != target_platform]
+    - cairo       # [build_platform != target_platform]
+    - gdk-pixbuf  # [build_platform != target_platform]
+    - gettext     # [build_platform != target_platform]
+    - glib        # [build_platform != target_platform]
+    - pango       # [build_platform != target_platform]
   host:
     - atk
     - cairo
     - gdk-pixbuf
     - gettext
     - glib
-    - gobject-introspection
     - pango
   run:
     - pango

@@ -2,6 +2,8 @@
 # Get an updated config.sub and config.guess
 cp $BUILD_PREFIX/share/gnuconfig/config.* .
 
+export XDG_DATA_DIRS=${XDG_DATA_DIRS}:$PREFIX/share
+
 
 GDKTARGET=""
 if [[ "${target_platform}" == osx-* ]]; then
@@ -52,6 +54,8 @@ if [[ "$CONDA_BUILD_CROSS_COMPILATION" == 1 ]]; then
   )
   export GI_CROSS_LAUNCHER=$BUILD_PREFIX/libexec/gi-cross-launcher-load.sh
 fi
+
+export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$BUILD_PREFIX/lib/pkgconfig
 
 ./configure \
     --prefix="${PREFIX}" \
