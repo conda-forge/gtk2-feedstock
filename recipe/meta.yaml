@@ -10,67 +10,26 @@ source:
   sha256: ac2ac757f5942d318a311a54b0c80b5ef295f299c2a73c632f6bfb1ff49cc6da
 
 build:
-  number: 4
+  number: 0
   skip: true  # [win]
 
 requirements:
   build:
     - make
     - pkg-config
-    - perl
+    - perl *
     - gnuconfig  # [unix]
     - {{ compiler('c') }}
-    - {{ compiler('cxx') }}
-    - cross-python_{{ target_platform }}  # [build_platform != target_platform]
-    - python 3.8
   host:
-    # Need to explicitly pin implicitly pulled in Python to make cross-compiling work
-    - python 3.8
     - atk
     - cairo
-    - fontconfig
-    - freetype
     - gdk-pixbuf
     - gettext
     - glib
     - gobject-introspection
-    - graphite2
-    - harfbuzz
-    - icu
-    - jpeg
-    - libffi
-    - libiconv
-    - libpng
-    - libtiff
-    - libxml2
     - pango
-    - pcre
-    - pixman
-    - xz
-    - zlib
   run:
-    - atk
-    - cairo
-    - fontconfig
-    - freetype
-    - gdk-pixbuf
-    - gettext
-    - glib
-    - gobject-introspection
-    - graphite2
-    - harfbuzz
-    - icu
-    - jpeg
-    - libffi
-    - libiconv
-    - libpng
-    - libtiff
-    - libxml2
     - pango
-    - pcre
-    - pixman
-    - xz
-    - zlib
 
 test:
   commands:
