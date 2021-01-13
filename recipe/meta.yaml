@@ -20,6 +20,13 @@ requirements:
     - perl *
     - gnuconfig  # [unix]
     - {{ compiler('c') }}
+    - atk                    # [build_platform != target_platform]
+    - cairo                  # [build_platform != target_platform]
+    - gdk-pixbuf             # [build_platform != target_platform]
+    - gettext                # [build_platform != target_platform]
+    - glib                   # [build_platform != target_platform]
+    - gobject-introspection  # [build_platform != target_platform]
+    - pango                  # [build_platform != target_platform]
   host:
     - atk
     - cairo
