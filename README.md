@@ -163,4 +163,5 @@ Feedstock Maintainers
 
 * [@jakirkham](https://github.com/jakirkham/)
 * [@pkgw](https://github.com/pkgw/)
+* [@xhochy](https://github.com/xhochy/)
 
