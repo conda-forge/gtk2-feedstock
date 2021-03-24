@@ -15,9 +15,9 @@ docker_image:
 gdk_pixbuf:
 - '2'
 glib:
-- '2.66'
+- '2'
 pango:
-- '1.42'
+- '1.48'
 pin_run_as_build:
   cairo:
     max_pin: x.x
