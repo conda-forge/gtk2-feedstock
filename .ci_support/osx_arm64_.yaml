@@ -7,7 +7,7 @@ c_compiler_version:
 cairo:
 - '1.16'
 channel_sources:
-- conda-forge/label/rust_dev,conda-forge
+- conda-forge
 channel_targets:
 - conda-forge main
 gdk_pixbuf:
@@ -17,7 +17,7 @@ glib:
 macos_machine:
 - arm64-apple-darwin20.0.0
 pango:
-- '1.48'
+- '1.50'
 pin_run_as_build:
   cairo:
     max_pin: x.x
