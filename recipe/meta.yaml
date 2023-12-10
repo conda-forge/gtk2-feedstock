@@ -8,9 +8,11 @@ package:
 source:
   url: http://ftp.gnome.org/pub/GNOME/sources/gtk+/{{ major_minor }}/gtk+-{{ version }}.tar.xz
   sha256: ac2ac757f5942d318a311a54b0c80b5ef295f299c2a73c632f6bfb1ff49cc6da
+  # TODO: consider a few patches from ubuntu
+  # https://salsa.debian.org/gnome-team/gtk2/-/tree/ubuntu/master/debian/patches
 
 build:
-  number: 2
+  number: 3
   skip: true  # [win]
 
 requirements:
@@ -33,8 +35,6 @@ requirements:
     - gdk-pixbuf
     - gettext
     - glib
-    - pango
-  run:
     - pango
 
 test:

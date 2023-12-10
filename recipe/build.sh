@@ -9,6 +9,8 @@ GDKTARGET=""
 if [[ "${target_platform}" == osx-* ]]; then
     export GDKTARGET="quartz"
     export LDFLAGS="${LDFLAGS} -Wl,-rpath,${PREFIX}/lib -framework Carbon"
+    # https://discourse.llvm.org/t/clang-16-notice-of-potentially-breaking-changes/65562
+    export CFLAGS="${CFLAGS} -Wno-error=incompatible-function-pointer-types"
 elif [[ "${target_platform}" == linux-* ]]; then
     export GDKTARGET="x11"
     export LDFLAGS="${LDFLAGS} -Wl,-rpath=${PREFIX}/lib"
@@ -64,3 +66,8 @@ export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$BUILD_PREFIX/lib/pkgconfig
 make V=0 -j$CPU_COUNT
 # make check -j$CPU_COUNT
 make install -j$CPU_COUNT
+
+# We use the GTK 3 version of gtk-update-icon-cache
+# https://github.com/conda-forge/gtk2-feedstock/issues/24
+rm -f ${PREFIX}/bin/gtk-update-icon-cache
+rm -f ${PREFIX}/share/man/man1/gtk-update-icon-cache.1
