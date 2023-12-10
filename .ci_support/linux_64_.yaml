@@ -1,9 +1,9 @@
 c_compiler:
 - gcc
 c_compiler_version:
-- '9'
+- '12'
 cairo:
-- '1.16'
+- '1'
 cdt_name:
 - cos6
 channel_sources:
@@ -18,10 +18,5 @@ glib:
 - '2'
 pango:
 - '1.50'
-pin_run_as_build:
-  cairo:
-    max_pin: x.x
-  pango:
-    max_pin: x.x
 target_platform:
 - linux-64
