@@ -36,6 +36,12 @@ requirements:
     - gettext
     - glib
     - pango
+    - fontconfig       # [linux]
+    - freetype         # [linux]
+    - harfbuzz         # [linux]
+    - xorg-libx11      # [linux]
+    - xorg-libxext     # [linux]
+    - xorg-libxrender  # [linux]
 
 test:
   commands:
