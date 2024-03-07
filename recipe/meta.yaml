@@ -23,17 +23,16 @@ requirements:
     - gnuconfig  # [unix]
     - gobject-introspection
     - {{ compiler('c') }}
+    - gettext
     - atk         # [build_platform != target_platform]
     - cairo       # [build_platform != target_platform]
     - gdk-pixbuf  # [build_platform != target_platform]
-    - gettext     # [build_platform != target_platform]
     - glib        # [build_platform != target_platform]
     - pango       # [build_platform != target_platform]
   host:
     - atk
     - cairo
     - gdk-pixbuf
-    - gettext
     - glib
     - pango
     - fontconfig       # [linux]
