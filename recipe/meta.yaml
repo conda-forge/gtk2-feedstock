@@ -35,6 +35,7 @@ requirements:
     - gdk-pixbuf
     - glib
     - pango
+    - gettext          # [osx]
     - fontconfig       # [linux]
     - freetype         # [linux]
     - harfbuzz         # [linux]
