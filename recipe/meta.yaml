@@ -12,7 +12,7 @@ source:
   # https://salsa.debian.org/gnome-team/gtk2/-/tree/ubuntu/master/debian/patches
 
 build:
-  number: 3
+  number: 4
   skip: true  # [win]
 
 requirements:
@@ -23,19 +23,25 @@ requirements:
     - gnuconfig  # [unix]
     - gobject-introspection
     - {{ compiler('c') }}
+    - gettext
     - atk         # [build_platform != target_platform]
     - cairo       # [build_platform != target_platform]
     - gdk-pixbuf  # [build_platform != target_platform]
-    - gettext     # [build_platform != target_platform]
     - glib        # [build_platform != target_platform]
     - pango       # [build_platform != target_platform]
   host:
     - atk
     - cairo
     - gdk-pixbuf
-    - gettext
     - glib
     - pango
+    - gettext          # [osx]
+    - fontconfig       # [linux]
+    - freetype         # [linux]
+    - harfbuzz         # [linux]
+    - xorg-libx11      # [linux]
+    - xorg-libxext     # [linux]
+    - xorg-libxrender  # [linux]
 
 test:
   commands:
