@@ -12,7 +12,7 @@ source:
   # https://salsa.debian.org/gnome-team/gtk2/-/tree/ubuntu/master/debian/patches
 
 build:
-  number: 4
+  number: 5
   skip: true  # [win]
 
 requirements:
@@ -23,6 +23,7 @@ requirements:
     - gnuconfig  # [unix]
     - gobject-introspection
     - {{ compiler('c') }}
+    - {{ stdlib("c") }}
     - gettext
     - atk         # [build_platform != target_platform]
     - cairo       # [build_platform != target_platform]
