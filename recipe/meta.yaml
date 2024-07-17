@@ -24,7 +24,7 @@ requirements:
     - gobject-introspection
     - {{ compiler('c') }}
     - {{ stdlib("c") }}
-    - gettext
+    - gettext-tools
     - atk         # [build_platform != target_platform]
     - cairo       # [build_platform != target_platform]
     - gdk-pixbuf  # [build_platform != target_platform]
@@ -36,7 +36,7 @@ requirements:
     - gdk-pixbuf
     - glib
     - pango
-    - gettext          # [osx]
+    - libintl-devel    # [osx]
     - fontconfig       # [linux]
     - freetype         # [linux]
     - harfbuzz         # [linux]
