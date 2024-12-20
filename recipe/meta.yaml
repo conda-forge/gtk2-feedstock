@@ -14,6 +14,12 @@ source:
 build:
   number: 6
   skip: true  # [win]
+  ignore_run_exports:
+    # these are the actual libraries associated with the metapackages
+    # that we needed to pull in for devel files below:
+    - libexpat
+    - liblzma
+    - libzlib
 
 requirements:
   build:
@@ -25,11 +31,16 @@ requirements:
     - {{ compiler('c') }}
     - {{ stdlib("c") }}
     - gettext-tools
-    - atk         # [build_platform != target_platform]
-    - cairo       # [build_platform != target_platform]
-    - gdk-pixbuf  # [build_platform != target_platform]
-    - glib        # [build_platform != target_platform]
-    - pango       # [build_platform != target_platform]
+    - atk             # [build_platform != target_platform]
+    - cairo           # [build_platform != target_platform]
+    - gdk-pixbuf      # [build_platform != target_platform]
+    - glib            # [build_platform != target_platform]
+    - pango           # [build_platform != target_platform]
+    # needed for devel files (e.g. pkg-config):
+    - expat           # [build_platform != target_platform]
+    - liblzma-devel   # [build_platform != target_platform]
+    - xorg-xorgproto  # [build_platform != target_platform]
+    - zlib            # [build_platform != target_platform]
   host:
     - atk
     - cairo
@@ -43,6 +54,10 @@ requirements:
     - xorg-libx11      # [linux]
     - xorg-libxext     # [linux]
     - xorg-libxrender  # [linux]
+    - expat
+    - liblzma-devel
+    - xorg-xorgproto
+    - zlib
 
 test:
   commands:
