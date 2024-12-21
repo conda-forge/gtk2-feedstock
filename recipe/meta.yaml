@@ -21,7 +21,7 @@ requirements:
     - pkg-config
     - perl *
     - expat
-    - gnuconfig  # [unix]
+    - gnuconfig
     - gobject-introspection
     - {{ compiler('c') }}  # [unix]
     - {{ stdlib("c") }}  # [unix]
