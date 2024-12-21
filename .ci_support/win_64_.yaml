@@ -1,0 +1,18 @@
+c_compiler:
+- vs2019
+c_stdlib:
+- vs
+cairo:
+- '1'
+channel_sources:
+- conda-forge
+channel_targets:
+- conda-forge main
+gdk_pixbuf:
+- '2'
+glib:
+- '2'
+pango:
+- '1'
+target_platform:
+- win-64
