@@ -19,7 +19,7 @@ elif [[ "${target_platform}" == win-* ]]; then
     export PKG_CONFIG=${BUILD_PREFIX}/bin/pkg-config
     $PKG_CONFIG --version
     export PERL5LIB="${BUILD_PREFIX}/lib/perl5/site-perl:${PERL5LIB}"
-    # Need to figure out: export GDKTARGET="x11"
+    export GDKTARGET="win32"
 fi
 
 configure_args=(
