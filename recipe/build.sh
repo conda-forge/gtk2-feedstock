@@ -14,6 +14,9 @@ if [[ "${target_platform}" == osx-* ]]; then
 elif [[ "${target_platform}" == linux-* ]]; then
     export GDKTARGET="x11"
     export LDFLAGS="${LDFLAGS} -Wl,-rpath=${PREFIX}/lib"
+elif [[ "${target_platform}" == win-* ]]; then
+    export GDKTARGET="x11"
+    export LDFLAGS="${LDFLAGS} -Wl,-rpath=${PREFIX}/lib"
 fi
 
 configure_args=(
