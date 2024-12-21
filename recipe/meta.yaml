@@ -20,6 +20,7 @@ requirements:
     - make
     - pkg-config
     - perl *
+    - expat
     - gnuconfig  # [unix]
     - gobject-introspection
     - {{ compiler('c') }}  # [unix]
@@ -27,6 +28,7 @@ requirements:
     - {{ compiler('m2w64_c') }}  # [not unix]
     - {{ stdlib("m2w64_c") }}  # [not unix]
     - gettext-tools
+    - liblzma-devel
     - zlib
     - atk         # [build_platform != target_platform]
     - cairo       # [build_platform != target_platform]
@@ -39,6 +41,7 @@ requirements:
     - gdk-pixbuf
     - glib
     - pango
+    - xorg-xorgproto
     - libintl-devel    # [osx]
     - fontconfig       # [linux]
     - freetype         # [linux]

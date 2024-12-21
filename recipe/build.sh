@@ -3,6 +3,7 @@
 cp $BUILD_PREFIX/share/gnuconfig/config.* .
 
 export XDG_DATA_DIRS=${XDG_DATA_DIRS}:$PREFIX/share
+export PKG_CONFIG_PATH="${PREFIX}/lib/pkgconfig:${PREFIX}/share/pkgconfig:${BUILD_PREFIX}/lib/pkgconfig"
 
 
 GDKTARGET=""
