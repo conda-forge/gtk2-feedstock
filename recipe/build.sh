@@ -31,7 +31,11 @@ elif [[ "${target_platform}" == win-* ]]; then
     PKG_CONFIG_PATH="${_pkg_config_path}"
 
     echo "DBG: PKG_CONFIG_PATH: ${PKG_CONFIG_PATH}"
-    $PKG_CONFIG --print-errors --exists glib-2.0
+    echo "DBG: glib-2.0: $($PKG_CONFIG --print-errors --exists 'glib-2.00 >= 2.28.0')"
+    echo "DBG:      atk: $($PKG_CONFIG --print-errors --exists 'atk >= 1.29.2')"
+    echo "DBG:    pango: $($PKG_CONFIG --print-errors --exists 'pango >= 1.20')"
+    echo "DBG:    cairo: $($PKG_CONFIG --print-errors --exists 'cairo >= 1.6')"
+    echo "DBG:   pixbuf: $($PKG_CONFIG --print-errors --exists 'gdk-pixbuf-2.0 >= 2.21.0')"
 
     export PKG_CONFIG_PATH
     export PKG_CONFIG_LIBDIR="${PKG_CONFIG_PATH}"
@@ -70,12 +74,6 @@ if [[ "$CONDA_BUILD_CROSS_COMPILATION" == 1 ]]; then
 
     ../configure --prefix=$BUILD_PREFIX "${configure_args[@]}"
 
-    echo "DBG: glib-mkenums in native build"
-    grep -3 glib-mkenums config.status
-    echo $(which python)
-    python -V
-    /usr/bin/env python -V
-
     # This script would generate the functions.txt and dump.xml and save them
     # This is loaded in the native build. We assume that the functions exported
     # by glib are the same for the native and cross builds
@@ -99,12 +97,6 @@ export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$BUILD_PREFIX/lib/pkgconfig
 ./configure \
     --prefix="${PREFIX}" \
     "${configure_args[@]}"
-
-    echo "DBG: glib-mkenums in native build"
-    grep -3 glib-mkenums config.status
-    echo $(which python)
-    python -V
-    /usr/bin/env python -V
 
 make V=0 -j$CPU_COUNT
 # make check -j$CPU_COUNT
