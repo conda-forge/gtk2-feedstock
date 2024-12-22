@@ -39,11 +39,15 @@ elif [[ "${target_platform}" == win-* ]]; then
     export PKG_CONFIG_PATH
     export PKG_CONFIG_LIBDIR="${PKG_CONFIG_PATH}"
 
-    echo DBG: glib-2.0: $($PKG_CONFIG --print-errors --exists "glib-2.00 >= 2.28.0")
-    echo DBG:      atk: $($PKG_CONFIG --print-errors --exists "atk >= 1.29.2")
-    echo DBG:    pango: $($PKG_CONFIG --print-errors --exists "pango >= 1.20")
-    echo DBG:    cairo: $($PKG_CONFIG --print-errors --exists "cairo >= 1.6")
-    echo DBG:   pixbuf: $($PKG_CONFIG --print-errors --exists "gdk-pixbuf-2.0 >= 2.21.0")
+    ls -l ${PREFIX}/Library/lib/pkgconfig
+    ls -l ${PREFIX}/lib/pkgconfig
+    ls -l ${PREFIX}/share/pkgconfig
+
+echo DBG: glib-2.0: $($PKG_CONFIG --print-errors --exists "glib-2.0 >= 2.28.0" && echo "found" || echo "not found")
+echo DBG:      atk: $($PKG_CONFIG --print-errors --exists "atk >= 1.29.2" && echo "found" || echo "not found")
+echo DBG:    pango: $($PKG_CONFIG --print-errors --exists "pango >= 1.20" && echo "found" || echo "not found")
+echo DBG:    cairo: $($PKG_CONFIG --print-errors --exists "cairo >= 1.6" && echo "found" || echo "not found")
+echo DBG:   pixbuf: $($PKG_CONFIG --print-errors --exists "gdk-pixbuf-2.0 >= 2.21.0" && echo "found" || echo "not found")
 
     export PERL5LIB="${BUILD_PREFIX}/lib/perl5/site-perl:${PERL5LIB}"
     export GDKTARGET="win32"
