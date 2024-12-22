@@ -24,11 +24,14 @@ elif [[ "${target_platform}" == win-* ]]; then
     _pkg_config="$(which pkg-config | sed 's|^/\(.\)|\1:|g' | sed 's|/|\\|g')"
     export PKG_CONFIG="${_pkg_config}"
 
-    _pkg_config_path="$(echo ${PREFIX}/Library/lib/pkgconfig | sed 's|^/\(.\)|\1:|g' | sed 's|/|\\|g')"
-    PKG_CONFIG_PATH="${_pkg_config_path}${PKG_CONFIG_PATH:+:}${PKG_CONFIG_PATH}"
+    _pkg_config_path="$(echo ${PKG_CONFIG_PATH} | sed 's|:|;|g' | sed 's|^/\(.\)|\1:|g' | sed 's|/|\\|g')"
+    PKG_CONFIG_PATH="${_pkg_config_path}"
 
-    _pkg_config_path="$(echo ${BUILD_PREFIX}/Library/lib/pkgconfig | sed 's|^/\(.\)|\1:|g' | sed 's|/|\\|g')"
-    PKG_CONFIG_PATH="${_pkg_config_path}${PKG_CONFIG_PATH:+:}${PKG_CONFIG_PATH}"
+    _pkg_config_path="$(echo ${PREFIX}/Library/lib/pkgconfig | sed 's|:|;|g' | sed 's|^/\(.\)|\1:|g' | sed 's|/|\\|g')"
+    PKG_CONFIG_PATH="${_pkg_config_path}${PKG_CONFIG_PATH:+;}${PKG_CONFIG_PATH}"
+
+    _pkg_config_path="$(echo ${BUILD_PREFIX}/Library/lib/pkgconfig | sed 's|:|;|g' | sed 's|^/\(.\)|\1:|g' | sed 's|/|\\|g')"
+    PKG_CONFIG_PATH="${_pkg_config_path};${PKG_CONFIG_PATH}"
 
     export PKG_CONFIG_PATH
     export PKG_CONFIG_LIBDIR="${PKG_CONFIG_PATH}"
@@ -66,8 +69,9 @@ if [[ "$CONDA_BUILD_CROSS_COMPILATION" == 1 ]]; then
     export PKG_CONFIG_PATH=$BUILD_PREFIX/lib/pkgconfig
 
     ../configure --prefix=$BUILD_PREFIX "${configure_args[@]}"
-    cat config.status
-    cat gdk/gdkconfig.h
+
+    echo "DBG: glib-mkenums in native build"
+    grep glib-mkenums config.status
 
     # This script would generate the functions.txt and dump.xml and save them
     # This is loaded in the native build. We assume that the functions exported
@@ -86,9 +90,9 @@ export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$BUILD_PREFIX/lib/pkgconfig
     --prefix="${PREFIX}" \
     "${configure_args[@]}"
 
-cat config.status
-echo "Find gdk-enums"
-grep gdk-enums config.status
+    echo "DBG: glib-mkenums in cross build"
+    echo "DBG: $(/usr/bin/env python -V)"
+    grep glib-mkenums config.status
 
 make V=0 -j$CPU_COUNT
 # make check -j$CPU_COUNT
