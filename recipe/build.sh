@@ -5,10 +5,6 @@ cp $BUILD_PREFIX/share/gnuconfig/config.* .
 export XDG_DATA_DIRS=${XDG_DATA_DIRS}:$PREFIX/share
 export PKG_CONFIG_PATH="${PREFIX}/lib/pkgconfig:${PREFIX}/share/pkgconfig:${BUILD_PREFIX}/lib/pkgconfig"
 
-env | sort
-ls ${SYS_PREFIX}/etc
-ls ${SYS_PREFIX}/etc/profile.d
-
 GDKTARGET=""
 if [[ "${target_platform}" == osx-* ]]; then
     export GDKTARGET="quartz"
@@ -18,15 +14,17 @@ if [[ "${target_platform}" == osx-* ]]; then
     mkdir -p "${SRC_DIR}/local_bin"
     export PATH="${SRC_DIR}/local_bin:$PATH"
     cp "${PREFIX}/bin/glib-mkenums" "${SRC_DIR}/local_bin"
-    _python = $(which python)
+    _python=$(which python)
     sed -i.bak "s|/usr/bin/env python|${_python}|" "${SRC_DIR}/local_bin/glib-mkenums"
 elif [[ "${target_platform}" == linux-* ]]; then
     export GDKTARGET="x11"
     export LDFLAGS="${LDFLAGS} -Wl,-rpath=${PREFIX}/lib"
 elif [[ "${target_platform}" == win-* ]]; then
-    echo $(which pkg-config)
-    export PKG_CONFIG=${BUILD_PREFIX}/bin/pkg-config
-    export PATH=${BUILD_PREFIX}/bin:$PATH
+    _pkg_config="$(which pkg-config | sed 's|^/\(.\)|\1:|g' | sed 's|/|\\|g')"
+    _pkg_config_path="$(echo ${PREFIX}/Library/lib/pkgconfig | sed 's|^/\(.\)|\1:|g' | sed 's|/|\\|g')"
+    export PKG_CONFIG="${_pkg_config}"
+    export PKG_CONFIG_PATH="${_pkg_config_path}"
+    export PKG_CONFIG_LIBDIR="${PKG_CONFIG_PATH}"
     $PKG_CONFIG --version
     export PERL5LIB="${BUILD_PREFIX}/lib/perl5/site-perl:${PERL5LIB}"
     export GDKTARGET="win32"
