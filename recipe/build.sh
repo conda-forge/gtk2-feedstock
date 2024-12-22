@@ -16,6 +16,7 @@ elif [[ "${target_platform}" == linux-* ]]; then
     export GDKTARGET="x11"
     export LDFLAGS="${LDFLAGS} -Wl,-rpath=${PREFIX}/lib"
 elif [[ "${target_platform}" == win-* ]]; then
+    echo $(which pkg-config)
     export PKG_CONFIG=${BUILD_PREFIX}/bin/pkg-config
     $PKG_CONFIG --version
     export PERL5LIB="${BUILD_PREFIX}/lib/perl5/site-perl:${PERL5LIB}"

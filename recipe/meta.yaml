@@ -63,7 +63,7 @@ requirements:
     - xorg-libxrender  # [linux]
     # - expat
     # - liblzma-devel
-    # - xorg-xorgproto￼
+    # - xorg-xorgproto
     # - zlib
 
 test:
