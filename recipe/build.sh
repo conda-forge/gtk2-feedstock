@@ -3,10 +3,10 @@
 cp $BUILD_PREFIX/share/gnuconfig/config.* .
 
 export XDG_DATA_DIRS=${XDG_DATA_DIRS}:$PREFIX/share
-export PKG_CONFIG_PATH="${PREFIX}/lib/pkgconfig:${PREFIX}/share/pkgconfig:${BUILD_PREFIX}/lib/pkgconfig"
 
 GDKTARGET=""
 if [[ "${target_platform}" == osx-* ]]; then
+    export PKG_CONFIG_PATH="${PREFIX}/lib/pkgconfig:${PREFIX}/share/pkgconfig:${BUILD_PREFIX}/lib/pkgconfig${PKG_CONFIG_PATH:+:}${PKG_CONFIG_PATH}"
     export GDKTARGET="quartz"
     export LDFLAGS="${LDFLAGS} -Wl,-rpath,${PREFIX}/lib -framework Carbon"
     # https://discourse.llvm.org/t/clang-16-notice-of-potentially-breaking-changes/65562
@@ -17,15 +17,22 @@ if [[ "${target_platform}" == osx-* ]]; then
     _python=$(which python)
     sed -i.bak "s|/usr/bin/env python|${_python}|" "${SRC_DIR}/local_bin/glib-mkenums"
 elif [[ "${target_platform}" == linux-* ]]; then
+    export PKG_CONFIG_PATH="${PREFIX}/lib/pkgconfig:${PREFIX}/share/pkgconfig:${BUILD_PREFIX}/lib/pkgconfig${PKG_CONFIG_PATH:+:}${PKG_CONFIG_PATH}"
     export GDKTARGET="x11"
     export LDFLAGS="${LDFLAGS} -Wl,-rpath=${PREFIX}/lib"
 elif [[ "${target_platform}" == win-* ]]; then
     _pkg_config="$(which pkg-config | sed 's|^/\(.\)|\1:|g' | sed 's|/|\\|g')"
-    _pkg_config_path="$(echo ${PREFIX}/Library/lib/pkgconfig | sed 's|^/\(.\)|\1:|g' | sed 's|/|\\|g')"
     export PKG_CONFIG="${_pkg_config}"
-    export PKG_CONFIG_PATH="${_pkg_config_path}"
+
+    _pkg_config_path="$(echo ${PREFIX}/Library/lib/pkgconfig | sed 's|^/\(.\)|\1:|g' | sed 's|/|\\|g')"
+    PKG_CONFIG_PATH="${_pkg_config_path}${PKG_CONFIG_PATH:+:}${PKG_CONFIG_PATH}"
+
+    _pkg_config_path="$(echo ${BUILD_PREFIX}/Library/lib/pkgconfig | sed 's|^/\(.\)|\1:|g' | sed 's|/|\\|g')"
+    PKG_CONFIG_PATH="${_pkg_config_path}${PKG_CONFIG_PATH:+:}${PKG_CONFIG_PATH}"
+
+    export PKG_CONFIG_PATH
     export PKG_CONFIG_LIBDIR="${PKG_CONFIG_PATH}"
-    $PKG_CONFIG --version
+
     export PERL5LIB="${BUILD_PREFIX}/lib/perl5/site-perl:${PERL5LIB}"
     export GDKTARGET="win32"
 fi
@@ -59,6 +66,8 @@ if [[ "$CONDA_BUILD_CROSS_COMPILATION" == 1 ]]; then
     export PKG_CONFIG_PATH=$BUILD_PREFIX/lib/pkgconfig
 
     ../configure --prefix=$BUILD_PREFIX "${configure_args[@]}"
+    cat config.status
+    cat gdk/gdkconfig.h
 
     # This script would generate the functions.txt and dump.xml and save them
     # This is loaded in the native build. We assume that the functions exported
@@ -76,6 +85,10 @@ export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$BUILD_PREFIX/lib/pkgconfig
 ./configure \
     --prefix="${PREFIX}" \
     "${configure_args[@]}"
+
+cat config.status
+echo "Find gdk-enums"
+grep gdk-enums config.status
 
 make V=0 -j$CPU_COUNT
 # make check -j$CPU_COUNT
