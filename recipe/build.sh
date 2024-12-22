@@ -19,11 +19,8 @@ elif [[ "${target_platform}" == win-* ]]; then
     _pkg_config="$(which pkg-config | sed 's|^/\(.\)|\1:|g' | sed 's|/|\\|g')"
     export PKG_CONFIG="${_pkg_config}"
 
-    echo "DBG: PKG_CONFIG_PATH: ${PKG_CONFIG_PATH}"
-    $PKG_CONFIG --print-errors --exists glib-2.0
-
-    # Prepend the prefix to the PKG_CONFIG_PATH
-    _pkg_config_path=${PKG_CONFIG_PATH}${PKG_CONFIG_PATH:+;}$(echo ${PREFIX}/Library/lib/pkgconfig| sed 's|^/\(.\)|\1:|g' | sed 's|/|\\|g')
+    # Set the prefix to the PKG_CONFIG_PATH
+    _pkg_config_path=$(echo ${PREFIX}/Library/lib/pkgconfig| sed 's|^/\(.\)|\1:|g' | sed 's|/|\\|g')
     PKG_CONFIG_PATH="${_pkg_config_path}"
 
     echo "DBG: PKG_CONFIG_PATH: ${PKG_CONFIG_PATH}"
@@ -96,9 +93,11 @@ export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$BUILD_PREFIX/lib/pkgconfig
     --prefix="${PREFIX}" \
     "${configure_args[@]}"
 
-    echo "DBG: glib-mkenums in cross build"
-    echo "DBG: $(/usr/bin/env python -V)"
-    grep glib-mkenums config.status
+    echo "DBG: glib-mkenums in native build"
+    grep -3 glib-mkenums config.status
+    echo $(which python)
+    python -V
+    /usr/bin/env python -V
 
 make V=0 -j$CPU_COUNT
 # make check -j$CPU_COUNT
