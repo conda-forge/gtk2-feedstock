@@ -11,11 +11,6 @@ if [[ "${target_platform}" == osx-* ]]; then
     export LDFLAGS="${LDFLAGS} -Wl,-rpath,${PREFIX}/lib -framework Carbon"
     # https://discourse.llvm.org/t/clang-16-notice-of-potentially-breaking-changes/65562
     export CFLAGS="${CFLAGS} -Wno-error=incompatible-function-pointer-types"
-    mkdir -p "${SRC_DIR}/local_bin"
-    export PATH="${SRC_DIR}/local_bin:$PATH"
-    cp "${PREFIX}/bin/glib-mkenums" "${SRC_DIR}/local_bin"
-    _python=$(which python)
-    sed -i.bak "s|/usr/bin/env python|${_python}|" "${SRC_DIR}/local_bin/glib-mkenums"
 elif [[ "${target_platform}" == linux-* ]]; then
     export PKG_CONFIG_PATH="${PREFIX}/lib/pkgconfig:${PREFIX}/share/pkgconfig:${BUILD_PREFIX}/lib/pkgconfig${PKG_CONFIG_PATH:+:}${PKG_CONFIG_PATH}"
     export GDKTARGET="x11"
@@ -24,14 +19,22 @@ elif [[ "${target_platform}" == win-* ]]; then
     _pkg_config="$(which pkg-config | sed 's|^/\(.\)|\1:|g' | sed 's|/|\\|g')"
     export PKG_CONFIG="${_pkg_config}"
 
-    _pkg_config_path="$(echo ${PKG_CONFIG_PATH} | sed 's|:|;|g' | sed 's|^/\(.\)|\1:|g' | sed 's|/|\\|g')"
+    echo "DBG: PKG_CONFIG_PATH: ${PKG_CONFIG_PATH}"
+    $PKG_CONFIG --print-errors --exists glib-2.0
+
+    # Prepend the prefix to the PKG_CONFIG_PATH
+    _pkg_config_path=${PKG_CONFIG_PATH}${PKG_CONFIG_PATH:+;}$(echo ${PREFIX}/Library/lib/pkgconfig| sed 's|^/\(.\)|\1:|g' | sed 's|/|\\|g')
     PKG_CONFIG_PATH="${_pkg_config_path}"
 
-    _pkg_config_path="$(echo ${PREFIX}/Library/lib/pkgconfig | sed 's|:|;|g' | sed 's|^/\(.\)|\1:|g' | sed 's|/|\\|g')"
-    PKG_CONFIG_PATH="${_pkg_config_path}${PKG_CONFIG_PATH:+;}${PKG_CONFIG_PATH}"
+    echo "DBG: PKG_CONFIG_PATH: ${PKG_CONFIG_PATH}"
+    $PKG_CONFIG --print-errors --exists glib-2.0
 
-    _pkg_config_path="$(echo ${BUILD_PREFIX}/Library/lib/pkgconfig | sed 's|:|;|g' | sed 's|^/\(.\)|\1:|g' | sed 's|/|\\|g')"
-    PKG_CONFIG_PATH="${_pkg_config_path};${PKG_CONFIG_PATH}"
+    # Prepend the build prefix to the PKG_CONFIG_PATH
+    _pkg_config_path=${PKG_CONFIG_PATH}${PKG_CONFIG_PATH:+;}$(echo ${BUILD_PREFIX}/Library/lib/pkgconfig| sed 's|^/\(.\)|\1:|g' | sed 's|/|\\|g')
+    PKG_CONFIG_PATH="${_pkg_config_path}"
+
+    echo "DBG: PKG_CONFIG_PATH: ${PKG_CONFIG_PATH}"
+    $PKG_CONFIG --print-errors --exists glib-2.0
 
     export PKG_CONFIG_PATH
     export PKG_CONFIG_LIBDIR="${PKG_CONFIG_PATH}"
@@ -71,7 +74,10 @@ if [[ "$CONDA_BUILD_CROSS_COMPILATION" == 1 ]]; then
     ../configure --prefix=$BUILD_PREFIX "${configure_args[@]}"
 
     echo "DBG: glib-mkenums in native build"
-    grep glib-mkenums config.status
+    grep -3 glib-mkenums config.status
+    echo $(which python)
+    python -V
+    /usr/bin/env python -V
 
     # This script would generate the functions.txt and dump.xml and save them
     # This is loaded in the native build. We assume that the functions exported
