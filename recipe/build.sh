@@ -8,7 +8,6 @@ export PKG_CONFIG_PATH="${PREFIX}/lib/pkgconfig:${PREFIX}/share/pkgconfig:${BUIL
 env | sort
 ls ${SYS_PREFIX}/etc
 ls ${SYS_PREFIX}/etc/profile.d
-exit 1
 
 GDKTARGET=""
 if [[ "${target_platform}" == osx-* ]]; then
