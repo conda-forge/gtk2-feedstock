@@ -85,6 +85,13 @@ if [[ "$CONDA_BUILD_CROSS_COMPILATION" == 1 ]]; then
     popd
   )
   export GI_CROSS_LAUNCHER=$BUILD_PREFIX/libexec/gi-cross-launcher-load.sh
+
+  # The build system needs to run glib tools like `glib-mkenums` but discovers
+  # the path to them using pkg-config by default. If we let this happen, when
+  # cross-compiling it will try to run a program with the wrong CPU type.
+  export GLIB_COMPILE_RESOURCES=$BUILD_PREFIX/bin/glib-compile-resources
+  export GLIB_GENMARSHAL=$BUILD_PREFIX/bin/glib-genmarshal
+  export GLIB_MKENUMS=$BUILD_PREFIX/bin/glib-mkenums
 fi
 
 export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$BUILD_PREFIX/lib/pkgconfig
