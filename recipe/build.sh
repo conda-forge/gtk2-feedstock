@@ -127,12 +127,13 @@ else
 
   # Remove 'sed'
   perl -pi -e '
-    s/glib_config_major_version=`\$PKG_CONFIG --modversion glib-2.0 \| sed '\''s\/\(\[0-9\]\*\)\\.\(\[0-9\]\*\)\\.\(\[0-9\]\*\)\/\1\/'\''`/glib_config_major_version=`perl -e "print((split(/\\./, \"$min_glib_version\"))[0])"`/g;
-    s/glib_config_minor_version=`\$PKG_CONFIG --modversion glib-2.0 \| sed '\''s\/\(\[0-9\]\*\)\\.\(\[0-9\]\*\)\\.\(\[0-9\]\*\)\/\2\/'\''`/glib_config_minor_version=`perl -e "print((split(/\\./, \"$min_glib_version\"))[1])"`/g;
-    s/glib_config_micro_version=`\$PKG_CONFIG --modversion glib-2.0 \| sed '\''s\/\(\[0-9\]\*\)\\.\(\[0-9\]\*\)\\.\(\[0-9\]\*\)\/\3\/'\''`/glib_config_micro_version=`perl -e "print((split(/\\./, \"$min_glib_version\"))[2])"`/g
-  ' configure
+    s/glib_config_major_version=`\$PKG_CONFIG --modversion glib-2.0 \| sed '\''s\/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\)\/\1\/'\''`/glib_config_major_version=`perl -e "print((split(/\\./, \"$min_glib_version\"))[0])"`/g;
+    s/glib_config_minor_version=`\$PKG_CONFIG --modversion glib-2.0 \| sed '\''s\/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\)\/\2\/'\''`/glib_config_minor_version=`perl -e "print((split(/\\./, \"$min_glib_version\"))[1])"`/g;
+    s/glib_config_micro_version=`\$PKG_CONFIG --modversion glib-2.0 \| sed '\''s\/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\)\/\3\/'\''`/glib_config_micro_version=`perl -e "print((split(/\\./, \"$min_glib_version\"))[2])"`/g
+' configure
+
   echo glib version $($PKG_CONFIG --modversion glib-2.0)
-  echo glib version $($PKG_CONFIG --atleast "2.28.0" glib-2.0)
+  echo glib version $($PKG_CONFIG --atleast-version "2.28.0" glib-2.0)
 fi
 
 ./configure \
