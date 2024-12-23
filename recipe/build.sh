@@ -93,21 +93,11 @@ fi
 if [[ "${target_platform}" != win-* ]]; then
   export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$BUILD_PREFIX/lib/pkgconfig
 else
-  $PKG_CONFIG --print-errors --cflags "glib-2.0 >= 2.28.0"
-  $PKG_CONFIG --print-errors --cflags "atk >= 1.29.2"
-  $PKG_CONFIG --print-errors --cflags "pango >= 1.20"
-  $PKG_CONFIG --print-errors --cflags "cairo >= 1.6"
-  $PKG_CONFIG --print-errors --cflags "gdk-pixbuf-2.0 >= 2.21.0"
-
-  $PKG_CONFIG --print-errors --libs "glib-2.0 >= 2.28.0"
-  $PKG_CONFIG --print-errors --libs "atk >= 1.29.2"
-  $PKG_CONFIG --print-errors --libs "pango >= 1.20"
-  $PKG_CONFIG --print-errors --libs "cairo >= 1.6"
-  $PKG_CONFIG --print-errors --libs "gdk-pixbuf-2.0 >= 2.21.0"
-
-  echo DBG:   cflags: $PKG_CONFIG --print-errors --cflags "glib-2.0 >= 2.28.0 atk >= 1.29.2 pango >= 1.20 cairo >= 1.6 gdk-pixbuf-2.0 >= 2.21.0"
-  echo DBG:     libs: $PKG_CONFIG --print-errors --libs "glib-2.0 >= 2.28.0 atk >= 1.29.2 pango >= 1.20 cairo >= 1.6 gdk-pixbuf-2.0 >= 2.21.0"
-  export BASE_DEPENDENCIES_LIBS=$($PKG_CONFIG --print-errors --libs "glib-2.0 >= 2.28.0 atk >= 1.29.2 pango >= 1.20 cairo >= 1.6 gdk-pixbuf-2.0 >= 2.21.0")
+  # Loop over the dependencies and get the cflags and libs
+  for dep in ("glib-2.0 >= 2.28.0" "atk >= 1.29.2" "pango >= 1.20" "cairo >= 1.6" "gdk-pixbuf-2.0 >= 2.21.0"); do
+    BASE_DEPENDENCIES_CFLAGS="${BASE_DEPENDENCIES_CFLAGS:-} $($PKG_CONFIG --print-errors --cflags $dep)"
+    BASE_DEPENDENCIES_LIBS="${BASE_DEPENDENCIES_LIBS:-} $($PKG_CONFIG --print-errors --libs $dep)"
+  done
 fi
 
 ./configure \
