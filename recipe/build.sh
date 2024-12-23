@@ -95,8 +95,8 @@ if [[ "${target_platform}" != win-* ]]; then
 else
   # Loop over the dependencies and get the cflags and libs
   for dep in "glib-2.0 >= 2.28.0" "atk >= 1.29.2" "pango >= 1.20" "cairo >= 1.6" "gdk-pixbuf-2.0 >= 2.21.0"; do
-    BASE_DEPENDENCIES_CFLAGS="${BASE_DEPENDENCIES_CFLAGS:-} $($PKG_CONFIG --print-errors --cflags $dep)"
-    BASE_DEPENDENCIES_LIBS="${BASE_DEPENDENCIES_LIBS:-} $($PKG_CONFIG --print-errors --libs $dep)"
+    BASE_DEPENDENCIES_CFLAGS="${BASE_DEPENDENCIES_CFLAGS:-} $($PKG_CONFIG --print-errors --cflags "$dep")"
+    BASE_DEPENDENCIES_LIBS="${BASE_DEPENDENCIES_LIBS:-} $($PKG_CONFIG --print-errors --libs "$dep")"
   done
   export BASE_DEPENDENCIES_CFLAGS
   export BASE_DEPENDENCIES_LIBS
