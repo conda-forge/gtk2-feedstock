@@ -124,6 +124,7 @@ else
   # Odd case of pkg-config not having the --uninstalled option on windows.
   # Replace all the '$PKG_CONFIG +--uninstalled with false || $PKG_CONFIG --uninstalled
   perl -i -pe 's/\$PKG_CONFIG --uninstalled/false \&\& $PKG_CONFIG --uninstalled/g' configure && (perl -ne 'print if / --uninstalled/' configure || exit 0)
+  echo glib version $($PKG_CONFIG --modversion glib-2.0)
 fi
 
 ./configure \
