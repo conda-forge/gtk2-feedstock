@@ -99,10 +99,31 @@ else
     BASE_DEPENDENCIES_CFLAGS="${BASE_DEPENDENCIES_CFLAGS:-} $($PKG_CONFIG --cflags "$dep")"
     BASE_DEPENDENCIES_LIBS="${BASE_DEPENDENCIES_LIBS:-} $($PKG_CONFIG --libs "$dep")"
   done
+  # Clean up CFLAGS - remove duplicate -I paths
+  BASE_DEPENDENCIES_CFLAGS="$(echo "$BASE_DEPENDENCIES_CFLAGS" | \
+    tr ' ' '\n' | \
+    awk '!seen[$0]++' | \
+    tr '\n' ' ')"
+
+  # Clean up LIBS - remove duplicate -L paths and libraries
+  BASE_DEPENDENCIES_LIBS="$(echo "$BASE_DEPENDENCIES_LIBS" | \
+    tr ' ' '\n' | \
+    awk '!seen[$0]++' | \
+    tr '\n' ' ')"
+
+  # Optional: trim leading/trailing spaces
+  BASE_DEPENDENCIES_CFLAGS="${BASE_DEPENDENCIES_CFLAGS# }"
+  BASE_DEPENDENCIES_CFLAGS="${BASE_DEPENDENCIES_CFLAGS% }"
+  BASE_DEPENDENCIES_LIBS="${BASE_DEPENDENCIES_LIBS# }"
+  BASE_DEPENDENCIES_LIBS="${BASE_DEPENDENCIES_LIBS% }"
   echo "BASE_DEPENDENCIES_CFLAGS: $BASE_DEPENDENCIES_CFLAGS"
   echo "BASE_DEPENDENCIES_LIBS: $BASE_DEPENDENCIES_LIBS"
   export BASE_DEPENDENCIES_CFLAGS
   export BASE_DEPENDENCIES_LIBS
+
+  # Odd case of pkg-config not having the --uninstalled option on windows.
+  # Replace all the '$PKG_CONFIG +--uninstalled with false || $PKG_CONFIG --uninstalled
+  sed -i.bak 's@$PKG_CONFIG[[:space:]]+--uninstalled@false || $PKG_CONFIG --uninstalled@g' configure
 fi
 
 ./configure \
