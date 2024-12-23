@@ -12,7 +12,7 @@ source:
   # https://salsa.debian.org/gnome-team/gtk2/-/tree/ubuntu/master/debian/patches
 
 build:
-  number: 6
+  number: 7
   skip: true  # [win]
   ignore_run_exports:
     # these are the actual libraries associated with the metapackages
