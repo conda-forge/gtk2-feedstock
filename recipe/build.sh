@@ -20,7 +20,6 @@ elif [[ "${target_platform}" == win-* ]]; then
     export PKG_CONFIG="${_pkg_config}"
 
     # Set the prefix to the PKG_CONFIG_PATH
-    echo "DBG: PKG_CONFIG_PATH: ${PKG_CONFIG_PATH}"
     _pkg_config_path=$(echo ${PREFIX}/Library/lib/pkgconfig| sed 's|^/\(.\)|\1:|g' | sed 's|/|\\|g')
     PKG_CONFIG_PATH="${_pkg_config_path}"
 
@@ -93,6 +92,16 @@ fi
 
 if [[ "${target_platform}" != win-* ]]; then
   export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$BUILD_PREFIX/lib/pkgconfig
+else
+  echo DBG: glib-2.0: $($PKG_CONFIG --print-errors --exists "glib-2.0 >= 2.28.0" && echo "found" || echo "not found")
+  echo DBG:      atk: $($PKG_CONFIG --print-errors --exists "atk >= 1.29.2" && echo "found" || echo "not found")
+  echo DBG:    pango: $($PKG_CONFIG --print-errors --exists "pango >= 1.20" && echo "found" || echo "not found")
+  echo DBG:    cairo: $($PKG_CONFIG --print-errors --exists "cairo >= 1.6" && echo "found" || echo "not found")
+  echo DBG:   pixbuf: $($PKG_CONFIG --print-errors --exists "gdk-pixbuf-2.0 >= 2.21.0" && echo "found" || echo "not found")
+
+  echo DBG:   cflags: $PKG_CONFIG --print-errors --cflags "glib-2.0 >= 2.28.0 atk >= 1.29.2 pango >= 1.20 cairo >= 1.6 gdk-pixbuf-2.0 >= 2.21.0"
+  echo DBG:     libs: $PKG_CONFIG --print-errors --libs "glib-2.0 >= 2.28.0 atk >= 1.29.2 pango >= 1.20 cairo >= 1.6 gdk-pixbuf-2.0 >= 2.21.0"
+  export BASE_DEPENDENCIES_LIBS=$($PKG_CONFIG --print-errors --libs "glib-2.0 >= 2.28.0 atk >= 1.29.2 pango >= 1.20 cairo >= 1.6 gdk-pixbuf-2.0 >= 2.21.0")
 fi
 
 ./configure \
