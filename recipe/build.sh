@@ -123,7 +123,8 @@ else
 
   # Odd case of pkg-config not having the --uninstalled option on windows.
   # Replace all the '$PKG_CONFIG +--uninstalled with false || $PKG_CONFIG --uninstalled
-  sed -i.bak 's@$PKG_CONFIG[[:space:]]+--uninstalled@false || $PKG_CONFIG --uninstalled@g' configure
+  sed -i.bak 's@$PKG_CONFIG --uninstalled@false || $PKG_CONFIG --uninstalled@g' configure
+  grep -q '$PKG_CONFIG --uninstalled' configure && exit 1
 fi
 
 ./configure \
