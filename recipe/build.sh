@@ -123,7 +123,8 @@ else
 
   # Odd case of pkg-config not having the --uninstalled option on windows.
   # Replace all the '$PKG_CONFIG +--uninstalled with false || $PKG_CONFIG --uninstalled
-  powershell -Command "(Get-Content configure) -replace '\$PKG_CONFIG --uninstalled', 'false || $PKG_CONFIG --uninstalled' | Set-Content configure.new; Move-Item configure.new configure -Force; if (Select-String -Pattern '\$PKG_CONFIG --uninstalled' -Path configure) { exit 1 }"
+  powershell -Command "(Get-Content configure) -replace '\$PKG_CONFIG --uninstalled', 'false || $PKG_CONFIG --uninstalled' | Set-Content configure.new; Move-Item configure.new configure -Force; if (Select-String -Pattern ' --uninstalled' -Path configure) { exit 1 }"
+  # powershell -Command "if ((Get-Content configure | Select-String '\$PKG_CONFIG --uninstalled')) { exit 1 } else { exit 0 }"
 fi
 
 ./configure \
