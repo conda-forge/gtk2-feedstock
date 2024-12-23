@@ -31,8 +31,6 @@ requirements:
     - {{ stdlib("c") }}  # [unix]
     - {{ compiler('m2w64_c') }}  # [not unix]
     - {{ stdlib("m2w64_c") }}  # [not unix]
-    - m2-sed  # [not unix]
-    - m2-grep  # [not unix]
     - gettext-tools
     - atk             # [build_platform != target_platform]
     - cairo           # [build_platform != target_platform]
