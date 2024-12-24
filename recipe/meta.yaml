@@ -12,8 +12,7 @@ source:
   # https://salsa.debian.org/gnome-team/gtk2/-/tree/ubuntu/master/debian/patches
 
 build:
-  number: 7
-  skip: true  # [win]
+  number: 8
   ignore_run_exports:
     # these are the actual libraries associated with the metapackages
     # that we needed to pull in for devel files below:
@@ -26,10 +25,13 @@ requirements:
     - make
     - pkg-config
     - perl *
-    - gnuconfig  # [unix]
+    - gnuconfig
     - gobject-introspection
-    - {{ compiler('c') }}
-    - {{ stdlib("c") }}
+    - {{ compiler('c') }}  # [unix]
+    - {{ stdlib("c") }}  # [unix]
+    - {{ compiler('m2w64_c') }}  # [not unix]
+    - {{ stdlib("m2w64_c") }}  # [not unix]
+    - libiconv  # [not unix]
     - gettext-tools
     - atk             # [build_platform != target_platform]
     - cairo           # [build_platform != target_platform]
@@ -47,6 +49,7 @@ requirements:
     - gdk-pixbuf
     - glib
     - pango
+    - xorg-xorgproto
     - libintl-devel    # [osx]
     - fontconfig       # [linux]
     - freetype         # [linux]

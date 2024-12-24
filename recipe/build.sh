@@ -4,16 +4,43 @@ cp $BUILD_PREFIX/share/gnuconfig/config.* .
 
 export XDG_DATA_DIRS=${XDG_DATA_DIRS}:$PREFIX/share
 
-
 GDKTARGET=""
 if [[ "${target_platform}" == osx-* ]]; then
+    export PKG_CONFIG_PATH="${PREFIX}/lib/pkgconfig:${PREFIX}/share/pkgconfig:${BUILD_PREFIX}/lib/pkgconfig${PKG_CONFIG_PATH:+:}${PKG_CONFIG_PATH}"
     export GDKTARGET="quartz"
     export LDFLAGS="${LDFLAGS} -Wl,-rpath,${PREFIX}/lib -framework Carbon"
     # https://discourse.llvm.org/t/clang-16-notice-of-potentially-breaking-changes/65562
     export CFLAGS="${CFLAGS} -Wno-error=incompatible-function-pointer-types"
 elif [[ "${target_platform}" == linux-* ]]; then
+    export PKG_CONFIG_PATH="${PREFIX}/lib/pkgconfig:${PREFIX}/share/pkgconfig:${BUILD_PREFIX}/lib/pkgconfig${PKG_CONFIG_PATH:+:}${PKG_CONFIG_PATH}"
     export GDKTARGET="x11"
     export LDFLAGS="${LDFLAGS} -Wl,-rpath=${PREFIX}/lib"
+elif [[ "${target_platform}" == win-* ]]; then
+    _pkg_config="$(which pkg-config | sed 's|^/\(.\)|\1:|g' | sed 's|/|\\|g')"
+    export PKG_CONFIG="${_pkg_config}"
+
+    # Set the prefix to the PKG_CONFIG_PATH
+    _pkg_config_path=$(echo ${PREFIX}/Library/lib/pkgconfig| sed 's|^/\(.\)|\1:|g' | sed 's|/|\\|g')
+    PKG_CONFIG_PATH="${_pkg_config_path}"
+
+    # Prepend the build prefix to the PKG_CONFIG_PATH
+    _pkg_config_path=${PKG_CONFIG_PATH}${PKG_CONFIG_PATH:+;}$(echo ${BUILD_PREFIX}/Library/lib/pkgconfig| sed 's|^/\(.\)|\1:|g' | sed 's|/|\\|g')
+    PKG_CONFIG_PATH="${_pkg_config_path}"
+
+    # Prepend the build prefix to the PKG_CONFIG_PATH
+    _pkg_config_path=${PKG_CONFIG_PATH}${PKG_CONFIG_PATH:+;}$(echo ${PREFIX}/lib/pkgconfig| sed 's|^/\(.\)|\1:|g' | sed 's|/|\\|g')
+    PKG_CONFIG_PATH="${_pkg_config_path}"
+
+    # Prepend the build prefix to the PKG_CONFIG_PATH
+    _pkg_config_path=${PKG_CONFIG_PATH}${PKG_CONFIG_PATH:+;}$(echo ${PREFIX}/share/pkgconfig| sed 's|^/\(.\)|\1:|g' | sed 's|/|\\|g')
+    PKG_CONFIG_PATH="${_pkg_config_path}"
+
+    export PKG_CONFIG_PATH
+    # export PKG_CONFIG_LIBDIR="${PKG_CONFIG_PATH}"
+    export PATH="${BUILD_PREFIX}/Library/bin:${PREFIX}/Library/bin:${PATH}"
+
+    export PERL5LIB="${BUILD_PREFIX}/lib/perl5/site-perl:${PERL5LIB}"
+    export GDKTARGET="win32"
 fi
 
 configure_args=(
@@ -64,11 +91,53 @@ if [[ "$CONDA_BUILD_CROSS_COMPILATION" == 1 ]]; then
   export GLIB_MKENUMS=$BUILD_PREFIX/bin/glib-mkenums
 fi
 
-export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$BUILD_PREFIX/lib/pkgconfig
+if [[ "${target_platform}" != win-* ]]; then
+  export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$BUILD_PREFIX/lib/pkgconfig
+else
+  # Loop over the dependencies and get the cflags and libs
+  for dep in "glib-2.0 >= 2.28.0" "atk >= 1.29.2" "pango >= 1.20" "cairo >= 1.6" "gdk-pixbuf-2.0 >= 2.21.0"; do
+    $PKG_CONFIG --print-errors --exists "$dep"
+    BASE_DEPENDENCIES_CFLAGS="${BASE_DEPENDENCIES_CFLAGS:-} $($PKG_CONFIG --cflags "$dep")"
+    BASE_DEPENDENCIES_LIBS="${BASE_DEPENDENCIES_LIBS:-} $($PKG_CONFIG --libs "$dep")"
+  done
+#  # Clean up CFLAGS - remove duplicate -I paths
+#  BASE_DEPENDENCIES_CFLAGS="$(echo "$BASE_DEPENDENCIES_CFLAGS" | \
+#    tr ' ' '\n' | \
+#    awk '!seen[$0]++' | \
+#    tr '\n' ' ')"
+#
+#  # Clean up LIBS - remove duplicate -L paths and libraries
+#  BASE_DEPENDENCIES_LIBS="$(echo "$BASE_DEPENDENCIES_LIBS" | \
+#    tr ' ' '\n' | \
+#    awk '!seen[$0]++' | \
+#    tr '\n' ' ')"
+#
+#  # Optional: trim leading/trailing spaces
+#  BASE_DEPENDENCIES_CFLAGS="${BASE_DEPENDENCIES_CFLAGS# }"
+#  BASE_DEPENDENCIES_CFLAGS="${BASE_DEPENDENCIES_CFLAGS% }"
+#  BASE_DEPENDENCIES_LIBS="${BASE_DEPENDENCIES_LIBS# }"
+#  BASE_DEPENDENCIES_LIBS="${BASE_DEPENDENCIES_LIBS% }"
+#  echo "BASE_DEPENDENCIES_CFLAGS: $BASE_DEPENDENCIES_CFLAGS"
+#  echo "BASE_DEPENDENCIES_LIBS: $BASE_DEPENDENCIES_LIBS"
+  export BASE_DEPENDENCIES_CFLAGS
+  export BASE_DEPENDENCIES_LIBS
 
-./configure \
+  # Odd case of pkg-config not having the --uninstalled option on windows.
+  # Replace all the '$PKG_CONFIG +--uninstalled with false || $PKG_CONFIG --uninstalled
+  perl -i -pe 's/\$PKG_CONFIG --uninstalled/false \&\& $PKG_CONFIG --uninstalled/g' configure && (perl -ne 'print if / --uninstalled/' configure || exit 0)
+
+  echo glib version $($PKG_CONFIG --modversion glib-2.0)
+  echo glib version :$($PKG_CONFIG --atleast-version "2.28.0" "glib-2.0 >= 2.28.0"):
+  echo glib libs $($PKG_CONFIG --libs glib-2.0)
+  echo $GLIB_LIBS
+  sed -i 's/  no_glib=yes/  no_glib=yes\n  echo "DEBUG: Run failed, error=\$?"/g' configure
+fi
+
+./configure --enable-debug=yes --enable-glibtest=no \
     --prefix="${PREFIX}" \
     "${configure_args[@]}"
+exit 1
+cat config.log
 
 make V=0 -j$CPU_COUNT
 # make check -j$CPU_COUNT
