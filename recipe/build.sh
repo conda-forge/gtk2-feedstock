@@ -131,9 +131,9 @@ else
   echo $GLIB_LIBS
 fi
 
-./configure --enable-debug=yes \
+./configure --enable-debug=yes --enable-glibtest=no \
     --prefix="${PREFIX}" \
-    "${configure_args[@]}" || true
+    "${configure_args[@]}"
 
 cat config.log
 
