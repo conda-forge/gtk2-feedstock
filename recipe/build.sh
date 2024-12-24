@@ -125,12 +125,10 @@ else
   # Replace all the '$PKG_CONFIG +--uninstalled with false || $PKG_CONFIG --uninstalled
   perl -i -pe 's/\$PKG_CONFIG --uninstalled/false \&\& $PKG_CONFIG --uninstalled/g' configure && (perl -ne 'print if / --uninstalled/' configure || exit 0)
 
-  # Remove 'sed'
-  perl -pi -e '
-    s/glib_config_major_version=`\$PKG_CONFIG --modversion glib-2.0 \| sed '\''s\/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\)\/\1\/'\''`/glib_config_major_version=`perl -e "print((split(/\\./, \"$min_glib_version\"))[0])"`/g;
-    s/glib_config_minor_version=`\$PKG_CONFIG --modversion glib-2.0 \| sed '\''s\/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\)\/\2\/'\''`/glib_config_minor_version=`perl -e "print((split(/\\./, \"$min_glib_version\"))[1])"`/g;
-    s/glib_config_micro_version=`\$PKG_CONFIG --modversion glib-2.0 \| sed '\''s\/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\)\/\3\/'\''`/glib_config_micro_version=`perl -e "print((split(/\\./, \"$min_glib_version\"))[2])"`/g
-' configure
+  # Install sed in its own environment
+  conda create -n sed -c conda-forge m2-sed m2-grep
+  # Add the path to sed in the sed environment to the PATH
+  export PATH=$CONDA_PREFIX/envs/sed/bin:$PATH
 
   echo glib version $($PKG_CONFIG --modversion glib-2.0)
   echo glib version $($PKG_CONFIG --atleast-version "2.28.0" glib-2.0)
