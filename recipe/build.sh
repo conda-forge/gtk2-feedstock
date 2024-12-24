@@ -136,7 +136,6 @@ fi
     "${configure_args[@]}" || true
 
 cat config.log
-exit 1
 
 make V=0 -j$CPU_COUNT
 # make check -j$CPU_COUNT
