@@ -132,9 +132,9 @@ else
   echo $(which sed)
   echo glib version $($PKG_CONFIG --modversion glib-2.0)
   echo glib version $($PKG_CONFIG --atleast-version "2.28.0" "glib-2.0 >= 2.28.0")
-  glib_config_major_version=`$PKG_CONFIG --modversion glib-2.0 | sed 's/\([0-9]*\).\([0-9]*\).\([0-9]*\)/\1/'`
-  glib_config_minor_version=`$PKG_CONFIG --modversion glib-2.0 | sed 's/\([0-9]*\).\([0-9]*\).\([0-9]*\)/\2/'`
-  glib_config_micro_version=`$PKG_CONFIG --modversion glib-2.0 | sed 's/\([0-9]*\).\([0-9]*\).\([0-9]*\)/\3/'`
+  glib_config_major_version=$($PKG_CONFIG --modversion glib-2.0 | sed 's/\([0-9]*\).\([0-9]*\).\([0-9]*\)/\1/')
+  glib_config_minor_version=$($PKG_CONFIG --modversion glib-2.0 | sed 's/\([0-9]*\).\([0-9]*\).\([0-9]*\)/\2/')
+  glib_config_micro_version=$($PKG_CONFIG --modversion glib-2.0 | sed 's/\([0-9]*\).\([0-9]*\).\([0-9]*\)/\3/')
   echo "glib_config_major_version: $glib_config_major_version"
 fi
 
