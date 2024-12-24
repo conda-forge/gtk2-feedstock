@@ -130,7 +130,7 @@ else
   echo glib version :$($PKG_CONFIG --atleast-version "2.28.0" "glib-2.0 >= 2.28.0"):
   echo glib libs $($PKG_CONFIG --libs glib-2.0)
   echo $GLIB_LIBS
-  sed -i 's/if ac_fn_c_try_run "\$LINENO"; then/if ac_fn_c_try_run "\$LINENO"; then\n  echo "DEBUG: Run failed, error=\$?"/' configure
+  sed -i 's/  no_glib=yes/  no_glib=yes\n  echo "DEBUG: Run failed, error=\$?"/g' configure
 fi
 
 ./configure --enable-debug=yes --enable-glibtest=no \
