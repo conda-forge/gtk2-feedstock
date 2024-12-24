@@ -126,7 +126,7 @@ else
   perl -i -pe 's/\$PKG_CONFIG --uninstalled/false \&\& $PKG_CONFIG --uninstalled/g' configure && (perl -ne 'print if / --uninstalled/' configure || exit 0)
 
   # Install sed in its own environment
-  mamba create -y -n sed -c conda-forge m2-sed m2-grep
+  conda create -y -n sed -c conda-forge m2-sed m2-grep
   # Add the path to sed in the sed environment to the PATH
   export PATH=$CONDA_PREFIX/envs/sed/bin:$PATH
 
