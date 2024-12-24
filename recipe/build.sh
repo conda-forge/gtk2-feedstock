@@ -36,7 +36,8 @@ elif [[ "${target_platform}" == win-* ]]; then
     PKG_CONFIG_PATH="${_pkg_config_path}"
 
     export PKG_CONFIG_PATH
-    export PKG_CONFIG_LIBDIR="${PKG_CONFIG_PATH}"
+    # export PKG_CONFIG_LIBDIR="${PKG_CONFIG_PATH}"
+    export PATH="${BUILD_PREFIX}/Library/bin:${PREFIX}/Library/bin:${PATH}"
 
     export PERL5LIB="${BUILD_PREFIX}/lib/perl5/site-perl:${PERL5LIB}"
     export GDKTARGET="win32"
@@ -129,12 +130,13 @@ else
   echo glib version :$($PKG_CONFIG --atleast-version "2.28.0" "glib-2.0 >= 2.28.0"):
   echo glib libs $($PKG_CONFIG --libs glib-2.0)
   echo $GLIB_LIBS
+  sed -i 's/if ac_fn_c_try_run "\$LINENO"; then/if ac_fn_c_try_run "\$LINENO"; then\n  echo "DEBUG: Run failed, error=\$?"/' configure
 fi
 
 ./configure --enable-debug=yes --enable-glibtest=no \
     --prefix="${PREFIX}" \
     "${configure_args[@]}"
-
+exit 1
 cat config.log
 
 make V=0 -j$CPU_COUNT
