@@ -139,7 +139,7 @@ else
 fi
 
 ./configure --help
-./configure \
+./configure --enable-debug=yes \
     --prefix="${PREFIX}" \
     "${configure_args[@]}"
 
