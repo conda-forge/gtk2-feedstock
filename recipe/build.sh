@@ -125,23 +125,18 @@ else
   # Replace all the '$PKG_CONFIG +--uninstalled with false || $PKG_CONFIG --uninstalled
   perl -i -pe 's/\$PKG_CONFIG --uninstalled/false \&\& $PKG_CONFIG --uninstalled/g' configure && (perl -ne 'print if / --uninstalled/' configure || exit 0)
 
-  # Install sed in its own environment
-  conda create -y -n sed -c conda-forge m2-sed m2-grep
-  # Add the path to sed in the sed environment to the PATH
-  export PATH=$CONDA_PREFIX/envs/sed/bin:$PATH
-  echo $(which sed)
   echo glib version $($PKG_CONFIG --modversion glib-2.0)
-  echo glib version $($PKG_CONFIG --atleast-version "2.28.0" "glib-2.0 >= 2.28.0")
-  glib_config_major_version=$($PKG_CONFIG --modversion glib-2.0 | sed 's/\([0-9]*\).\([0-9]*\).\([0-9]*\)/\1/')
-  glib_config_minor_version=$($PKG_CONFIG --modversion glib-2.0 | sed 's/\([0-9]*\).\([0-9]*\).\([0-9]*\)/\2/')
-  glib_config_micro_version=$($PKG_CONFIG --modversion glib-2.0 | sed 's/\([0-9]*\).\([0-9]*\).\([0-9]*\)/\3/')
-  echo "glib_config_major_version: $glib_config_major_version"
+  echo glib version :$($PKG_CONFIG --atleast-version "2.28.0" "glib-2.0 >= 2.28.0"):
+  echo glib libs $($PKG_CONFIG --libs glib-2.0)
+  echo $GLIB_LIBS
 fi
 
-./configure --help
 ./configure --enable-debug=yes \
     --prefix="${PREFIX}" \
-    "${configure_args[@]}"
+    "${configure_args[@]}" || true
+
+cat config.log
+exit 1
 
 make V=0 -j$CPU_COUNT
 # make check -j$CPU_COUNT
