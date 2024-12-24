@@ -138,7 +138,8 @@ else
   echo "glib_config_major_version: $glib_config_major_version"
 fi
 
-./configure --debug \
+./configure --help
+./configure \
     --prefix="${PREFIX}" \
     "${configure_args[@]}"
 
