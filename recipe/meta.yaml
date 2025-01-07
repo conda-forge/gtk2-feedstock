@@ -19,30 +19,43 @@ build:
     - libexpat
     - liblzma
     - libzlib
+    - atk  # [not unix]
+    - libgcc  # [not unix]
+    - libwinpthread  # [not unix]
+    - ucrt  # [not unix]
 
 requirements:
   build:
-    - make
     - pkg-config
     - perl *
     - gnuconfig
     - gobject-introspection
-    - {{ compiler('c') }}  # [unix]
-    - {{ stdlib("c") }}  # [unix]
+    - {{ compiler('c') }}        # [unix]
+    - {{ stdlib("c") }}          # [unix]
+    - make                       # [unix]
     - {{ compiler('m2w64_c') }}  # [not unix]
-    - {{ stdlib("m2w64_c") }}  # [not unix]
-    - libiconv  # [not unix]
+    - {{ stdlib("m2w64_c") }}    # [not unix]
+    - fribidi                    # [not unix]
+    - graphite2                  # [not unix]
+    - harfbuzz                   # [not unix]
+    - libffi                     # [not unix]
+    - libiconv                   # [not unix]
+    - m2-autoconf                # [not unix]
+    - m2-automake-wrapper        # [not unix]
+    - m2-grep                    # [not unix]
+    - m2-make                    # [not unix]
+    - m2-which                   # [not unix]
     - gettext-tools
-    - atk             # [build_platform != target_platform]
-    - cairo           # [build_platform != target_platform]
-    - gdk-pixbuf      # [build_platform != target_platform]
-    - glib            # [build_platform != target_platform]
-    - pango           # [build_platform != target_platform]
+    - atk                        # [build_platform != target_platform]
+    - cairo                      # [build_platform != target_platform]
+    - gdk-pixbuf                 # [build_platform != target_platform]
+    - glib                       # [build_platform != target_platform]
+    - pango                      # [build_platform != target_platform]
     # needed for devel files (e.g. pkg-config):
-    - expat           # [build_platform != target_platform]
-    - liblzma-devel   # [build_platform != target_platform]
-    - xorg-xorgproto  # [build_platform != target_platform]
-    - zlib            # [build_platform != target_platform]
+    - expat                      # [build_platform != target_platform]
+    - liblzma-devel              # [build_platform != target_platform]
+    - xorg-xorgproto             # [build_platform != target_platform]
+    - zlib                       # [build_platform != target_platform]
   host:
     - atk
     - cairo
@@ -50,13 +63,14 @@ requirements:
     - glib
     - pango
     - xorg-xorgproto
-    - libintl-devel    # [osx]
-    - fontconfig       # [linux]
-    - freetype         # [linux]
-    - harfbuzz         # [linux]
-    - xorg-libx11      # [linux]
-    - xorg-libxext     # [linux]
-    - xorg-libxrender  # [linux]
+    - libgirepository            # [not unix]
+    - libintl-devel              # [osx or not unix]
+    - fontconfig                 # [linux]
+    - freetype                   # [linux]
+    - harfbuzz                   # [linux]
+    - xorg-libx11                # [linux]
+    - xorg-libxext               # [linux]
+    - xorg-libxrender            # [linux]
     - expat
     - liblzma-devel
     - xorg-xorgproto
@@ -66,6 +80,7 @@ test:
   commands:
     - test -f ${PREFIX}/lib/libgtk-x11-2.0{{ SHLIB_EXT }}  # [linux]
     - test -f ${PREFIX}/lib/libgtk-quartz-2.0{{ SHLIB_EXT }}  # [osx]
+    - if not exists %PREFIX%\\Library\\lib\\libgtk-win32-2.0-0{{ SHLIB_EXT }}  # [win]
 
 about:
   home: https://developer.gnome.org/gtk/
