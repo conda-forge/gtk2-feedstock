@@ -10,6 +10,12 @@ gdk_pixbuf:
 - '2'
 glib:
 - '2'
+harfbuzz:
+- '10'
+libffi:
+- '3.4'
+libiconv:
+- '1'
 liblzma_devel:
 - '5'
 m2w64_c_compiler:
