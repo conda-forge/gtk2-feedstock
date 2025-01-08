@@ -28,7 +28,7 @@ elif [[ "${target_platform}" == win-* ]]; then
       "uuid" "gdi32" "imm32" "shell32" "usp10" "ole32" "rpcrt4" "shlwapi" "iphlpapi"
       "dnsapi" "ws2_32" "winmm" "msimg32" "dwrite" "d2d1" "windowscodecs" "dl" "m" "dld"
       "svld" "w" "mlib" "dnet" "dnet_stub" "nsl" "bsd" "socket" "posix" "ipc" "XextSan"
-       "ICE" "Xinerama" "papi"
+      "ICE" "Xinerama" "papi"
     )
     exclude_regex=$(printf "|%s" "${system_libs_exclude[@]}")
     exclude_regex=${exclude_regex:1}
@@ -41,11 +41,12 @@ elif [[ "${target_platform}" == win-* ]]; then
 
     # Loop through the paths and update PKG_CONFIG_PATH
     for path in "${paths[@]}"; do
-        PKG_CONFIG_PATH="${PKG_CONFIG_PATH}${PKG_CONFIG_PATH:+:}${_pkg_config_path}"
+        PKG_CONFIG_PATH="${PKG_CONFIG_PATH:-}${PKG_CONFIG_PATH:+:}${path}"
     done
 
-    PKG_CONFIG=$(which pkg-config.exe | sed 's|^/\(\w\)|\1:|g')
-    PKG_CONFIG_PATH=$(echo "$PKG_CONFIG_PATH" | sed 's|^\(\w\):|/\1/|g')
+    # There seemed to be issues with unix path in some parts of the flow
+    PKG_CONFIG=$(which pkg-config.exe | sed -E 's|^/(\w)|\1:|')
+    PKG_CONFIG_PATH=$(echo "$PKG_CONFIG_PATH" | sed -E 's|^(\w):|/\1|' | sed -E 's|:(\w):|:/\1|g')
 
     export PKG_CONFIG
     export PKG_CONFIG_PATH
@@ -88,10 +89,10 @@ elif [[ "${target_platform}" == win-* ]]; then
 
     # Odd case of pkg-config not having the --uninstalled option on windows.
     # Replace all the '$PKG_CONFIG +--uninstalled with false || $PKG_CONFIG --uninstalled
-    perl -i -pe 's/\$PKG_CONFIG --uninstalled/false \&\& $PKG_CONFIG --uninstalled/g' configure
+    # perl -i -pe 's/\$PKG_CONFIG --uninstalled/false \&\& $PKG_CONFIG --uninstalled/g' configure
 
     # This test fails, let's force it to pass for now
-    perl -i -pe 's/\$PKG_CONFIG --atleast-version \$min_glib_version \$pkg_config_args/test x = x/g' configure
+    # perl -i -pe 's/\$PKG_CONFIG --atleast-version \$min_glib_version \$pkg_config_args/test x = x/g' configure
 
     # -Lppp -lxxx will apparently look for ppp/libxxx.lib (or dll.a), only ppp/xxx.lib exists - Only -lintl & -liconv present
     perl -i -pe "s#-lintl#${PREFIX}/Library/lib/intl.lib#g if /^\s*[IL]\w*IBS/" configure

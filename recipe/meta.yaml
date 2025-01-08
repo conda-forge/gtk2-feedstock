@@ -26,13 +26,13 @@ build:
 
 requirements:
   build:
-    - pkg-config
     - perl *
     - gnuconfig
     - gobject-introspection
     - {{ compiler('c') }}        # [unix]
     - {{ stdlib("c") }}          # [unix]
     - make                       # [unix]
+    - pkg-config                 # [unix]
     - {{ compiler('m2w64_c') }}  # [not unix]
     - {{ stdlib("m2w64_c") }}    # [not unix]
     - fribidi                    # [not unix]
@@ -44,6 +44,7 @@ requirements:
     - m2-automake-wrapper        # [not unix]
     - m2-grep                    # [not unix]
     - m2-make                    # [not unix]
+    - m2-pkg-config              # [not unix]
     - m2-which                   # [not unix]
     - gettext-tools
     - atk                        # [build_platform != target_platform]
