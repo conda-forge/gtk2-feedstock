@@ -13,6 +13,7 @@ source:
 
 build:
   number: 8
+  skip: true  # [unix]
   ignore_run_exports:
     # these are the actual libraries associated with the metapackages
     # that we needed to pull in for devel files below:
