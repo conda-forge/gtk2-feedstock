@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -uo pipefail
+set -exuo pipefail
 
 # Get an updated config.sub and config.guess
 cp $BUILD_PREFIX/share/gnuconfig/config.* .
@@ -30,7 +30,7 @@ elif [[ "${target_platform}" == win-* ]]; then
       "svld" "w" "mlib" "dnet" "dnet_stub" "nsl" "bsd" "socket" "posix" "ipc" "XextSan"
       "ICE" "Xinerama" "papi"
     )
-    exclude_regex=$(printf "|%s" "${system_libs_exclude[@]}")
+    exclude_regex=$(printf "|^%s$" "${system_libs_exclude[@]}")
     exclude_regex=${exclude_regex:1}
 
     # Set the prefix to the PKG_CONFIG_PATH
@@ -46,6 +46,7 @@ elif [[ "${target_platform}" == win-* ]]; then
 
     # There seemed to be issues with unix path in some parts of the flow
     PKG_CONFIG=$(which pkg-config.exe | sed -E 's|^/(\w)|\1:|')
+    PKG_CONFIG=$(echo "${RECIPE_DIR}/win_helpers/my-pkg-config.sh" | sed -E 's|^/(\w)|\1:|')
     PKG_CONFIG_PATH=$(echo "$PKG_CONFIG_PATH" | sed -E 's|^(\w):|/\1|' | sed -E 's|:(\w):|:/\1|g')
 
     export PKG_CONFIG
@@ -170,18 +171,23 @@ if [[ "${target_platform}" == win-* ]]; then
     "Makefile"
     "gdk/Makefile"
     "gdk/win32/Makefile"
+    "gtk/Makefile"
+    "modules/Makefile"
+    "modules/engines/ms-windows/Makefile"
+    "modules/engines/pixbuf/Makefile"
+    "modules/input"
+    "modules/other/gail/libgail-util/Makefile"
+    "modules/other/gail/tests/Makefile"
+    "tests/Makefile"
   )
-  while IFS= read -r file; do
-    makefiles+=("$file")
-  done < <(find modules gtk -name Makefile)
-  replace_l_flag_in_files "${makefiles[@]}"
+  replace_l_flag_in_files "${exclude_regex}" "${makefiles[@]}"
 
   # It appears that pkg-config is difficult to find within the mix of win/unix path separator (or at least that's how it appeared to me)
   perl -i -pe "s|(PKG_CONFIG)(\s*)=.*|\1\2=\2${PKG_CONFIG}|g"  "${makefiles[@]}"
 
   # Similarly for the .gir paths
   perl -i -pe "s|(--add-include-path=../gdk)|\1 --add-include-path=${BUILD_PREFIX}/Library/share/gir-1.0 --add-include-path=${PREFIX}/Library/share/gir-1.0|" "${makefiles[@]}"
-  perl -i -pe 's|(--add-include-path=../gdk)|--verbose \1|' "${makefiles[@]}"
+
   perl -i -pe "s|(\s+--includedir=\.)|\1 --includedir=${BUILD_PREFIX}/Library/share/gir-1.0 --includedir=${PREFIX}/Library/share/gir-1.0|" gdk/Makefile
   perl -i -pe "s|(\s+--includedir=\.\./gdk)|\1 --includedir=${BUILD_PREFIX}/Library/share/gir-1.0 --includedir=${PREFIX}/Library/share/gir-1.0|" gtk/Makefile
 
@@ -191,7 +197,9 @@ if [[ "${target_platform}" == win-* ]]; then
 
   # Specifying the compiler as GCC. Setting the system name to MINGW64 to avoid python lib defaulting to cl.exe on windows
   # The error is: Specified Compiler 'C:/.../x86_64-w64-mingw32-cc.exe' is unsupported.
-  perl -i -pe 's|INTROSPECTION_TYPELIBDIR|INTROSPECTION_SCANNER_ENV = MSYSTEM=MINGW64\nINTROSPECTION_TYPELIBDIR|'  "${makefiles[@]}"
+  perl -i -pe "s|INTROSPECTION_TYPELIBDIR|INTROSPECTION_SCANNER_ENV = MSYSTEM=MINGW64\nINTROSPECTION_TYPELIBDIR|"  "${makefiles[@]}"
+  pkg_config=$(echo "${RECIPE_DIR}/win_helpers/my-pkg-config.bat" | sed -E 's|/|\\\\|g')
+  perl -i -pe "s|(INTROSPECTION_SCANNER_ENV = MSYSTEM=MINGW64)|\1 PKG_CONFIG='${pkg_config}'|"  "${makefiles[@]}"
 fi
 
 make V=0 -j"$CPU_COUNT"
