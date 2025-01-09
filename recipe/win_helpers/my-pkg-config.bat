@@ -4,7 +4,7 @@ REM Path to the real pkg-config
 FOR /F "delims=" %%A IN ('where pkg-config.exe') DO SET "REAL_PKG_CONFIG=%%A"
 
 REM Log file (must be manually set because RECIPE_DIR is undefined in .bat)
-SET "LOG_FILE=%RECIPE_DIR%\debug\pkg-config-windebug.log"
+SET "LOG_FILE=%RECIPE_DIR%\pkg-config-windebug.log"
 
 REM Get current date and time for logging
 FOR /F "tokens=2 delims==" %%A IN ('wmic os get localdatetime /value 2^>nul') DO SET "DATETIME=%%A"

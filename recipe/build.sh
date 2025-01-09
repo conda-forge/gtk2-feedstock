@@ -196,7 +196,7 @@ if [[ "${target_platform}" == win-* ]]; then
   # It seems that libtool is missing some dynamic libraries to create the .dll
   perl -i -pe "s|(libgdk_win32_2_0_la_LIBADD = win32/libgdk-win32.la)|\1 -Wl,-L${build_conda_libs} -Wl,-L${host_conda_libs} -Wl,-lglib-2.0 -Wl,-lgobject-2.0 -Wl,-lgio-2.0 -Wl,-lcairo -Wl,-lgdk_pixbuf-2.0 -Wl,-lpango-1.0 -Wl,-lpangocairo-1.0 -Wl,-lintl|" gdk/Makefile
   perl -i -pe "s|(libgtk_win32_2_0_la_LIBADD.+?-lcomctl32)|\1 -Wl,-L${build_conda_libs} -Wl,-L${host_conda_libs} -Wl,-lglib-2.0 -Wl,-lgmodule-2.0 -Wl,-lgobject-2.0 -Wl,-latk-1.0 -Wl,-lgio-2.0 -Wl,-lcairo -Wl,-lgdk_pixbuf-2.0 -Wl,-lpango-1.0 -Wl,-lpangocairo-1.0 -Wl,-lintl|" gtk/Makefile
-  perl -i -pe "s|(libwimp_la_LIBADD.+?gdi32|\1 -Wl,-L${build_conda_libs} -Wl,-L${host_conda_libs} -Wl,-lglib-2.0 -Wl,-lgmodule-2.0 -Wl,-lgobject-2.0 -Wl,-lgio-2.0 -Wl,-lcairo -Wl,-lpango-1.0 -Wl,-lpangowin32-1.0|" modules/engines/ms-windows/Makefile
+  perl -i -pe "s|(libwimp_la_LIBADD.+?gdi32)|\1 -Wl,-L${build_conda_libs} -Wl,-L${host_conda_libs} -Wl,-lglib-2.0 -Wl,-lgmodule-2.0 -Wl,-lgobject-2.0 -Wl,-lgio-2.0 -Wl,-lcairo -Wl,-lpango-1.0 -Wl,-lpangowin32-1.0|" modules/engines/ms-windows/Makefile
   perl -i -pe "s|(libpixmap_la_LIBADD.+?ADDS\))|\1 ../../../gtk/.libs/libgtk-win32-2.0.dll.a -Wl,-L${build_conda_libs} -Wl,-L${host_conda_libs} -Wl,-lglib-2.0 -Wl,-lgmodule-2.0 -Wl,-lgobject-2.0 -Wl,-lgio-2.0 -Wl,-lgdk_pixbuf-2.0 -Wl,-lcairo|" modules/engines/pixbuf/Makefile
 
   # Specifying the compiler as GCC. Setting the system name to MINGW64 to avoid python lib defaulting to cl.exe on windows

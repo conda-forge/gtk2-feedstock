@@ -4,7 +4,7 @@
 REAL_PKG_CONFIG="$(which pkg-config.exe)"
 
 # Log file to store debug output
-LOG_FILE="${RECIPE_DIR}/debug/pkg-config-debug.log"
+LOG_FILE="${RECIPE_DIR}/pkg-config-debug.log"
 
 # Log the arguments passed to pkg-config
 echo "[$(date)] Arguments: $@" > "$LOG_FILE"
