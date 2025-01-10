@@ -20,7 +20,7 @@ elif [[ "${target_platform}" == linux-* ]]; then
     export GDKTARGET="x11"
     export LDFLAGS="${LDFLAGS} -Wl,-rpath=${PREFIX}/lib"
 elif [[ "${target_platform}" == win-* ]]; then
-    source "${RECIPE_DIR}/win_helpers/library_lflags_update.sh"
+    source "${RECIPE_DIR}/non-unix-helpers/library_lflags_update.sh"
 
     host_conda_libs="${PREFIX}/Library/lib"
     build_conda_libs="${BUILD_PREFIX}/Library/lib"
@@ -46,7 +46,7 @@ elif [[ "${target_platform}" == win-* ]]; then
 
     # There seemed to be issues with unix path in some parts of the flow
     PKG_CONFIG=$(which pkg-config.exe | sed -E 's|^/(\w)|\1:|')
-    PKG_CONFIG=$(echo "${RECIPE_DIR}/win_helpers/my-pkg-config.sh" | sed -E 's|^/(\w)|\1:|')
+    PKG_CONFIG=$(echo "${RECIPE_DIR}/non-unix-helpers/my-pkg-config.sh" | sed -E 's|^/(\w)|\1:|')
     PKG_CONFIG_PATH=$(echo "$PKG_CONFIG_PATH" | sed -E 's|^(\w):|/\1|' | sed -E 's|:(\w):|:/\1|g')
 
     export PKG_CONFIG
@@ -90,7 +90,7 @@ elif [[ "${target_platform}" == win-* ]]; then
     export BASE_DEPENDENCIES_CFLAGS
     export BASE_DEPENDENCIES_LIBS
 
-    # Odd case of pkg-config not having the --uninstalled option on windows.
+    # Odd case of pkg-config not having the --uninstalled option on non-unix.
     # Replace all the '$PKG_CONFIG +--uninstalled with false || $PKG_CONFIG --uninstalled
     # perl -i -pe 's/\$PKG_CONFIG --uninstalled/false \&\& $PKG_CONFIG --uninstalled/g' configure
 
@@ -180,7 +180,11 @@ if [[ "${target_platform}" == win-* ]]; then
     "modules/input/Makefile"
     "modules/other/gail/libgail-util/Makefile"
     "modules/other/gail/tests/Makefile"
+    "modules/other/gail/Makefile"
+    "demos/gtk-demo/Makefile"
+    "demos/Makefile"
     "tests/Makefile"
+    "perf/Makefile"
   )
   replace_l_flag_in_files "${exclude_regex}" "${makefiles[@]}"
 
@@ -197,12 +201,26 @@ if [[ "${target_platform}" == win-* ]]; then
   perl -i -pe "s|(libgdk_win32_2_0_la_LIBADD = win32/libgdk-win32.la)|\1 -Wl,-L${build_conda_libs} -Wl,-L${host_conda_libs} -Wl,-lglib-2.0 -Wl,-lgobject-2.0 -Wl,-lgio-2.0 -Wl,-lcairo -Wl,-lgdk_pixbuf-2.0 -Wl,-lpango-1.0 -Wl,-lpangocairo-1.0 -Wl,-lintl|" gdk/Makefile
   perl -i -pe "s|(libgtk_win32_2_0_la_LIBADD.+?-lcomctl32)|\1 -Wl,-L${build_conda_libs} -Wl,-L${host_conda_libs} -Wl,-lglib-2.0 -Wl,-lgmodule-2.0 -Wl,-lgobject-2.0 -Wl,-latk-1.0 -Wl,-lgio-2.0 -Wl,-lcairo -Wl,-lgdk_pixbuf-2.0 -Wl,-lpango-1.0 -Wl,-lpangocairo-1.0 -Wl,-lintl|" gtk/Makefile
   perl -i -pe "s|(libwimp_la_LIBADD.+?gdi32)|\1 -Wl,-L${build_conda_libs} -Wl,-L${host_conda_libs} -Wl,-lglib-2.0 -Wl,-lgmodule-2.0 -Wl,-lgobject-2.0 -Wl,-lgio-2.0 -Wl,-lcairo -Wl,-lpango-1.0 -Wl,-lpangowin32-1.0|" modules/engines/ms-windows/Makefile
-  perl -i -pe "s|(libpixmap_la_LIBADD.+?ADDS\))|\1 ../../../gtk/.libs/libgtk-win32-2.0.dll.a -Wl,-L${build_conda_libs} -Wl,-L${host_conda_libs} -Wl,-lglib-2.0 -Wl,-lgmodule-2.0 -Wl,-lgobject-2.0 -Wl,-lgio-2.0 -Wl,-lgdk_pixbuf-2.0 -Wl,-lcairo|" modules/engines/pixbuf/Makefile
+  perl -i -pe "s|(libpixmap_la_LIBADD.+?ADDS\))|\1 ../../../gtk/.libs/libgtk-win32-2.0.dll -Wl,-L${build_conda_libs} -Wl,-L${host_conda_libs} -Wl,-lglib-2.0 -Wl,-lgmodule-2.0 -Wl,-lgobject-2.0 -Wl,-lgio-2.0 -Wl,-lgdk_pixbuf-2.0 -Wl,-lcairo|" modules/engines/pixbuf/Makefile
 
-  # Specifying the compiler as GCC. Setting the system name to MINGW64 to avoid python lib defaulting to cl.exe on windows
+  perl -i -pe "s|(im_\w+_LIBADD.+?ADDS\))|\1 -Wl,-L${build_conda_libs} -Wl,-L${host_conda_libs} -Wl,-lgmodule-2.0 -Wl,-lgobject-2.0|" modules/input/Makefile
+  perl -i -pe "s#(im_(ime|multipress|thai)_la_LIBADD.+?gobject-2.0)#\1 -Wl,-lglib-2.0 -Wl,-lpango-1.0 -Wl,-lpangowin32-1.0#" modules/input/Makefile
+
+  perl -i -pe "s#(libgailutil_la_LIBADD = )#\1 -Wl,-lglib-2.0 -Wl,-lgobject-2.0 -Wl,-latk-1.0 -Wl,-lpango-1.0 -Wl,-lpangowin32-1.0#" modules/other/gail/libgail-util/Makefile
+  perl -i -pe "s#(lib\w+_LIBADD = )#\1 -Wl,-lglib-2.0 -Wl,-lgobject-2.0 -Wl,-latk-1.0#" modules/other/gail/tests/Makefile
+  perl -i -pe "s#(libgail\w+_LIBADD = )#\1 -Wl,-lglib-2.0 -Wl,-lgmodule-2.0 -Wl,-lgobject-2.0 -Wl,-lgdk_pixbuf-2.0 -Wl,-lpango-1.0 -Wl,-lpangowin32-1.0 -Wl,-latk-1.0#" modules/other/gail/Makefile
+
+  # Linker seems to get confused with mixed unix/non-unix paths
+  perl -i -pe 's#LDADD = #LDADD_0 = #' demos/Makefile perf/Makefile
+  perl -i -pe 's@(#testsocket_programs)@LDADD = $(shell echo $(LDADD_0) | sed \"s|C:/|/c/|g\")\n\1@' demos/Makefile perf/Makefile
+  perl -i -pe 's#LINK = #LINK_0 = #' demos/Makefile perf/Makefile
+  perl -i -pe 's#(AM_V_CCLD = )#LINK = $(shell echo $(LINK_0) | sed \"s|C:/|/c/|g\")\n\1#' demos/Makefile perf/Makefile
+  perl -i -pe 's#testtooltips$(EXEEXT) testvolumebutton$(EXEEXT)#testvolumebutton$(EXEEXT)#' demos/Makefile perf/Makefile
+
+  # Setting the system name to MINGW64 to prevent python lib defaulting to cl.exe on non-unix
   # The error is: Specified Compiler 'C:/.../x86_64-w64-mingw32-cc.exe' is unsupported.
   perl -i -pe "s|INTROSPECTION_TYPELIBDIR|INTROSPECTION_SCANNER_ENV = MSYSTEM=MINGW64\nINTROSPECTION_TYPELIBDIR|"  "${makefiles[@]}"
-  pkg_config=$(echo "${RECIPE_DIR}/win_helpers/my-pkg-config.bat" | sed -E 's|/|\\\\|g')
+  pkg_config=$(echo "${RECIPE_DIR}/non-unix-helpers/my-pkg-config.bat" | sed -E 's|/|\\\\|g')
   perl -i -pe "s|(INTROSPECTION_SCANNER_ENV = MSYSTEM=MINGW64)|\1 PKG_CONFIG='${pkg_config}'|"  "${makefiles[@]}"
 fi
 
