@@ -226,6 +226,12 @@ make V=0 -j"$CPU_COUNT"
 # make check -j$CPU_COUNT
 make install -j$CPU_COUNT
 
+if [[ "${target_platform}" == win-* ]]; then
+  dlltool -D ${PREFIX}/Library/bin/libgdk-win32-2.0-0.dll -d ${PREFIX}/Library/lib/gdk-win32-2.0.def -l ${PREFIX}/Library/lib/gdk-win32-2.0.lib
+  dlltool -D ${PREFIX}/Library/bin/libgtk-win32-2.0-0.dll -d ${PREFIX}/Library/lib/gtk-win32-2.0.def -l ${PREFIX}/Library/lib/gtk-win32-2.0.lib
+  dlltool -D ${PREFIX}/Library/bin/libgailutil-18.dll -d ${PREFIX}/Library/lib/gailutil.def -l ${PREFIX}/Library/lib/gailutil.lib
+fi
+
 # We use the GTK 3 version of gtk-update-icon-cache
 # https://github.com/conda-forge/gtk2-feedstock/issues/24
 rm -f ${PREFIX}/bin/gtk-update-icon-cache*
