@@ -207,14 +207,12 @@ if [[ "${target_platform}" == win-* ]]; then
   perl -i -pe "s#(im_(ime|multipress|thai)_la_LIBADD.+?gobject-2.0)#\1 -Wl,-lglib-2.0 -Wl,-lpango-1.0 -Wl,-lpangowin32-1.0#" modules/input/Makefile
 
   perl -i -pe "s#(libgailutil_la_LIBADD = )#\1 -Wl,-lglib-2.0 -Wl,-lgobject-2.0 -Wl,-latk-1.0 -Wl,-lpango-1.0 -Wl,-lpangowin32-1.0#" modules/other/gail/libgail-util/Makefile
-  perl -i -pe "s#(lib\w+_LIBADD = )#\1 -Wl,-lglib-2.0 -Wl,-lgobject-2.0 -Wl,-latk-1.0#" modules/other/gail/tests/Makefile
+  perl -i -pe "s#(lib\w+_LIBADD =)#\1 -Wl,-lglib-2.0 -Wl,-lgobject-2.0 -Wl,-latk-1.0#" modules/other/gail/tests/Makefile
   perl -i -pe "s#(libgail\w+_LIBADD = )#\1 -Wl,-lglib-2.0 -Wl,-lgmodule-2.0 -Wl,-lgobject-2.0 -Wl,-lgdk_pixbuf-2.0 -Wl,-lpango-1.0 -Wl,-lpangowin32-1.0 -Wl,-latk-1.0#" modules/other/gail/Makefile
 
   # Linker seems to get confused with mixed unix/non-unix paths
-  perl -i -pe 's#LDADD = #LDADD_0 = #' demos/Makefile perf/Makefile
-  perl -i -pe 's@(#testsocket_programs)@LDADD = $(shell echo $(LDADD_0) | sed \"s|C:/|/c/|g\")\n\1@' demos/Makefile perf/Makefile
-  perl -i -pe 's#LINK = #LINK_0 = #' demos/Makefile perf/Makefile
-  perl -i -pe 's#(AM_V_CCLD = )#LINK = $(shell echo $(LINK_0) | sed \"s|C:/|/c/|g\")\n\1#' demos/Makefile perf/Makefile
+  perl -i -pe 's#LDADDS = #LDADDS = \$(shell echo \$(LDADDS_0) | sed \"s|C:/|/c/|g\")\n\1\nLDADDS_0 = #' demos/Makefile perf/Makefile
+  perl -i -pe 's#LINK = #LINK = \$(shell echo \$(LINK_0) | sed \"s|C:/|/c/|g\")\nLINK_0 = #' demos/Makefile perf/Makefile
   perl -i -pe 's#testtooltips$(EXEEXT) testvolumebutton$(EXEEXT)#testvolumebutton$(EXEEXT)#' demos/Makefile perf/Makefile
 
   # Setting the system name to MINGW64 to prevent python lib defaulting to cl.exe on non-unix
