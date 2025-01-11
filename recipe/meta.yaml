@@ -85,7 +85,7 @@ test:
     - test -f ${PREFIX}/lib/libgtk-quartz-2.0{{ SHLIB_EXT }}  # [osx]
     - if not exists %PREFIX%\\Library\\bin\\libgtk-win32-2.0-0{{ SHLIB_EXT }}  # [win]
     - if not exists %PREFIX%\\Library\\lib\\libgtk-win32-2.0.dll.a  # [win]
-    - if not exists %PREFIX%\\Library\\lib\\lgtk-win32-2.0.lib  # [win]
+    - if not exists %PREFIX%\\Library\\lib\\gtk-win32-2.0.lib  # [win]
 
 about:
   home: https://developer.gnome.org/gtk/
