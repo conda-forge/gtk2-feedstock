@@ -36,6 +36,7 @@ requirements:
     - pkg-config                 # [unix]
     - {{ compiler('m2w64_c') }}  # [not unix]
     - {{ stdlib("m2w64_c") }}    # [not unix]
+    - binutils                   # [not unix]
     - fribidi                    # [not unix]
     - graphite2                  # [not unix]
     - harfbuzz                   # [not unix]
