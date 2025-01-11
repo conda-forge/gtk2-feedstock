@@ -83,7 +83,7 @@ test:
   commands:
     - test -f ${PREFIX}/lib/libgtk-x11-2.0{{ SHLIB_EXT }}  # [linux]
     - test -f ${PREFIX}/lib/libgtk-quartz-2.0{{ SHLIB_EXT }}  # [osx]
-    - if not exists %PREFIX%\\Library\\bin\\libgtk-win32-2.0-0{{ SHLIB_EXT }}  # [win]
+    - if not exists %PREFIX%\\Library\\bin\\libgtk-win32-2.0-0.dll  # [win]
     - if not exists %PREFIX%\\Library\\lib\\libgtk-win32-2.0.dll.a  # [win]
     - if not exists %PREFIX%\\Library\\lib\\gtk-win32-2.0.lib  # [win]
 
