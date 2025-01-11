@@ -90,7 +90,7 @@ about:
   home: https://developer.gnome.org/gtk/
   license: LGPL-2.1-or-later
   license_file: COPYING
-  summary: Primary library used to construct user interfaces in GNOME applications
+  summary: Primary library used to construct user interfaces in GNOME applications.
 
 extra:
   recipe-maintainers:
