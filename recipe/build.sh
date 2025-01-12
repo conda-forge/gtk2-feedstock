@@ -90,13 +90,6 @@ elif [[ "${target_platform}" == win-* ]]; then
     export BASE_DEPENDENCIES_CFLAGS
     export BASE_DEPENDENCIES_LIBS
 
-    # Odd case of pkg-config not having the --uninstalled option on non-unix.
-    # Replace all the '$PKG_CONFIG +--uninstalled with false || $PKG_CONFIG --uninstalled
-    # perl -i -pe 's/\$PKG_CONFIG --uninstalled/false \&\& $PKG_CONFIG --uninstalled/g' configure
-
-    # This test fails, let's force it to pass for now
-    # perl -i -pe 's/\$PKG_CONFIG --atleast-version \$min_glib_version \$pkg_config_args/test x = x/g' configure
-
     # -Lppp -lxxx will apparently look for ppp/libxxx.lib (or dll.a), only ppp/xxx.lib exists - Only -lintl & -liconv present
     perl -i -pe "s#-lintl#${PREFIX}/Library/lib/intl.lib#g if /^\s*[IL]\w*IBS/" configure
     perl -i -pe "s#-liconv#${BUILD_PREFIX}/Library/lib/iconv.lib#g if /^\s*[IL]\w*IBS/" configure
@@ -227,6 +220,7 @@ make V=0 -j"$CPU_COUNT"
 make install -j$CPU_COUNT
 
 if [[ "${target_platform}" == win-* ]]; then
+  # This is a bit overkill from debugging, though it does not hurt and it builds
   bindir=$(echo "${PREFIX}/Library/bin" | sed -E 's|/|\\|g')
   libdir=$(echo "${PREFIX}/Library/lib" | sed -E 's|/|\\|g')
   dlltool=${BUILD_PREFIX}/Library/x86_64-w64-mingw32/bin/dlltool.exe
