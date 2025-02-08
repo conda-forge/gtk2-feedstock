@@ -155,9 +155,7 @@ if [[ "${CONDA_BUILD_CROSS_COMPILATION:-0}" == 1 ]]; then
   export GLIB_MKENUMS=$BUILD_PREFIX/bin/glib-mkenums
 fi
 
-./configure --enable-debug=yes \
-    --prefix="${PREFIX}" \
-    "${configure_args[@]}"
+./configure --prefix="${PREFIX}" "${configure_args[@]}"
 
 if [[ "${target_platform}" == win-* ]]; then
   echo "Modifying Makefiles for -l<conda_lib>"
