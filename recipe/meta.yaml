@@ -12,48 +12,67 @@ source:
   # https://salsa.debian.org/gnome-team/gtk2/-/tree/ubuntu/master/debian/patches
 
 build:
-  number: 7
-  skip: true  # [win]
+  number: 8
   ignore_run_exports:
     # these are the actual libraries associated with the metapackages
     # that we needed to pull in for devel files below:
     - libexpat
     - liblzma
     - libzlib
+    - atk  # [not unix]
+    - libgcc  # [not unix]
+    - libwinpthread  # [not unix]
+    - ucrt  # [not unix]
 
 requirements:
   build:
-    - make
-    - pkg-config
     - perl *
-    - gnuconfig  # [unix]
+    - gnuconfig
     - gobject-introspection
-    - {{ compiler('c') }}
-    - {{ stdlib("c") }}
+    - {{ compiler('c') }}        # [unix]
+    - {{ stdlib("c") }}          # [unix]
+    - make                       # [unix]
+    - pkg-config                 # [unix]
+    - {{ compiler('m2w64_c') }}  # [not unix]
+    - {{ stdlib("m2w64_c") }}    # [not unix]
+    - binutils                   # [not unix]
+    - fribidi                    # [not unix]
+    - graphite2                  # [not unix]
+    - harfbuzz                   # [not unix]
+    - libffi                     # [not unix]
+    - libiconv                   # [not unix]
+    - m2-autoconf                # [not unix]
+    - m2-automake-wrapper        # [not unix]
+    - m2-grep                    # [not unix]
+    - m2-make                    # [not unix]
+    - m2-pkg-config              # [not unix]
+    - m2-which                   # [not unix]
     - gettext-tools
-    - atk             # [build_platform != target_platform]
-    - cairo           # [build_platform != target_platform]
-    - gdk-pixbuf      # [build_platform != target_platform]
-    - glib            # [build_platform != target_platform]
-    - pango           # [build_platform != target_platform]
+    - atk                        # [build_platform != target_platform]
+    - cairo                      # [build_platform != target_platform]
+    - gdk-pixbuf                 # [build_platform != target_platform]
+    - glib                       # [build_platform != target_platform]
+    - pango                      # [build_platform != target_platform]
     # needed for devel files (e.g. pkg-config):
-    - expat           # [build_platform != target_platform]
-    - liblzma-devel   # [build_platform != target_platform]
-    - xorg-xorgproto  # [build_platform != target_platform]
-    - zlib            # [build_platform != target_platform]
+    - expat                      # [build_platform != target_platform]
+    - liblzma-devel              # [build_platform != target_platform]
+    - xorg-xorgproto             # [build_platform != target_platform]
+    - zlib                       # [build_platform != target_platform]
   host:
     - atk
     - cairo
     - gdk-pixbuf
     - glib
     - pango
-    - libintl-devel    # [osx]
-    - fontconfig       # [linux]
-    - freetype         # [linux]
-    - harfbuzz         # [linux]
-    - xorg-libx11      # [linux]
-    - xorg-libxext     # [linux]
-    - xorg-libxrender  # [linux]
+    - xorg-xorgproto
+    - libgirepository            # [not unix]
+    - libintl-devel              # [osx or not unix]
+    - fontconfig                 # [linux]
+    - freetype                   # [linux]
+    - harfbuzz                   # [linux]
+    - xorg-libx11                # [linux]
+    - xorg-libxext               # [linux]
+    - xorg-libxrender            # [linux]
     - expat
     - liblzma-devel
     - xorg-xorgproto
@@ -63,12 +82,15 @@ test:
   commands:
     - test -f ${PREFIX}/lib/libgtk-x11-2.0{{ SHLIB_EXT }}  # [linux]
     - test -f ${PREFIX}/lib/libgtk-quartz-2.0{{ SHLIB_EXT }}  # [osx]
+    - if not exist %PREFIX%\\Library\\bin\\libgtk-win32-2.0-0.dll exit 1  # [win]
+    - if not exist %PREFIX%\\Library\\lib\\libgtk-win32-2.0.dll.a exit 1  # [win]
+    - if not exist %PREFIX%\\Library\\lib\\gtk-win32-2.0.lib exit 1  # [win]
 
 about:
   home: https://developer.gnome.org/gtk/
   license: LGPL-2.1-or-later
   license_file: COPYING
-  summary: Primary library used to construct user interfaces in GNOME applications
+  summary: Primary library used to construct user interfaces in GNOME applications.
 
 extra:
   recipe-maintainers:
